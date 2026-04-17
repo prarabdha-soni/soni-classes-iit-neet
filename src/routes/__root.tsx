@@ -38,13 +38,17 @@ export const Route = createRootRoute({
           "Chapter-wise tricks, shortcut formulas, mnemonics, flashcards & quick quizzes for IIT-JEE and NEET. Built for Indian students.",
       },
       { name: "author", content: "Soni Classes" },
-      { property: "og:title", content: "Soni Classes — JEE & NEET Quick Revision" },
+      { property: "og:title", content: "Soni Classes — JEE & NEET Tricks, Formulas & Quick Revision" },
       {
         property: "og:description",
         content: "Tricks, formulas & flashcards chapter-wise for IIT-JEE and NEET aspirants.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Soni Classes — JEE & NEET Tricks, Formulas & Quick Revision" },
+      { name: "description", content: "Soni Classes is a mobile app offering quick revision tools for IIT-JEE and NEET exams." },
+      { property: "og:description", content: "Soni Classes is a mobile app offering quick revision tools for IIT-JEE and NEET exams." },
+      { name: "twitter:description", content: "Soni Classes is a mobile app offering quick revision tools for IIT-JEE and NEET exams." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
