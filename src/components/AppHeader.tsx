@@ -22,7 +22,7 @@ export function AppHeader() {
           </div>
           <div className="leading-tight">
             <div className="font-display text-base font-bold tracking-tight">Soni Classes</div>
-            <div className="text-[10px] text-muted-foreground -mt-0.5">JEE • NEET tricks</div>
+            <div className="text-[10px] text-muted-foreground -mt-0.5">Physics quick revision</div>
           </div>
         </Link>
 
