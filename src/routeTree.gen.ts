@@ -9,38 +9,88 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SubjectSubjectIdRouteImport } from './routes/subject.$subjectId'
+import { Route as SubjectSubjectIdChapterSlugRouteImport } from './routes/subject.$subjectId.$chapterSlug'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SubjectSubjectIdRoute = SubjectSubjectIdRouteImport.update({
+  id: '/subject/$subjectId',
+  path: '/subject/$subjectId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubjectSubjectIdChapterSlugRoute =
+  SubjectSubjectIdChapterSlugRouteImport.update({
+    id: '/$chapterSlug',
+    path: '/$chapterSlug',
+    getParentRoute: () => SubjectSubjectIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
+  '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
+  '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
+  '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/search'
+    | '/subject/$subjectId'
+    | '/subject/$subjectId/$chapterSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/search'
+    | '/subject/$subjectId'
+    | '/subject/$subjectId/$chapterSlug'
+  id:
+    | '__root__'
+    | '/'
+    | '/search'
+    | '/subject/$subjectId'
+    | '/subject/$subjectId/$chapterSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SearchRoute: typeof SearchRoute
+  SubjectSubjectIdRoute: typeof SubjectSubjectIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +98,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/subject/$subjectId': {
+      id: '/subject/$subjectId'
+      path: '/subject/$subjectId'
+      fullPath: '/subject/$subjectId'
+      preLoaderRoute: typeof SubjectSubjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subject/$subjectId/$chapterSlug': {
+      id: '/subject/$subjectId/$chapterSlug'
+      path: '/$chapterSlug'
+      fullPath: '/subject/$subjectId/$chapterSlug'
+      preLoaderRoute: typeof SubjectSubjectIdChapterSlugRouteImport
+      parentRoute: typeof SubjectSubjectIdRoute
+    }
   }
 }
 
+interface SubjectSubjectIdRouteChildren {
+  SubjectSubjectIdChapterSlugRoute: typeof SubjectSubjectIdChapterSlugRoute
+}
+
+const SubjectSubjectIdRouteChildren: SubjectSubjectIdRouteChildren = {
+  SubjectSubjectIdChapterSlugRoute: SubjectSubjectIdChapterSlugRoute,
+}
+
+const SubjectSubjectIdRouteWithChildren =
+  SubjectSubjectIdRoute._addFileChildren(SubjectSubjectIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SearchRoute: SearchRoute,
+  SubjectSubjectIdRoute: SubjectSubjectIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
