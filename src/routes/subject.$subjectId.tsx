@@ -1,6 +1,6 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, BookOpen } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { getSubject } from "@/data/content";
 import { SubjectBadge, subjectGradient } from "@/components/SubjectIcon";
 
@@ -40,6 +40,13 @@ export const Route = createFileRoute("/subject/$subjectId")({
 
 function SubjectPage() {
   const { subject } = Route.useLoaderData();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const subjectPath = `/subject/${subject.id}`;
+  const isSubjectIndex = pathname === subjectPath || pathname === `${subjectPath}/`;
+
+  if (!isSubjectIndex) {
+    return <Outlet />;
+  }
 
   return (
     <div className="mx-auto max-w-4xl px-4 pt-6 pb-12">
@@ -64,6 +71,33 @@ function SubjectPage() {
           <p className="text-sm text-muted-foreground mt-1">{subject.tagline}</p>
         </div>
       </motion.div>
+
+      <section className="mt-8">
+        <div className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
+          <Sparkles className="h-4 w-4 text-primary" />
+          Important Topics
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          {subject.importantTopics.map((topic, i) => (
+            <motion.div
+              key={topic.title}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.04 }}
+              className="card-soft rounded-2xl p-4"
+            >
+              <div className="flex items-start gap-3">
+                <div className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${subjectGradient(subject.id)}`} />
+                <div>
+                  <h3 className="font-semibold">{topic.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{topic.description}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
       <h2 className="mt-8 mb-3 font-display text-lg font-bold flex items-center gap-2">
         <BookOpen className="h-4 w-4 text-primary" /> Chapters

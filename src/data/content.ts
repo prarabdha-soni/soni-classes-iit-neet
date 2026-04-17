@@ -1,5 +1,10 @@
 export type SubjectId = "physics" | "chemistry" | "maths" | "biology";
 
+export type ImportantTopic = {
+  title: string;
+  description: string;
+};
+
 export type Formula = {
   id: string;
   title: string;
@@ -29,6 +34,7 @@ export type Subject = {
   tagline: string;
   exam: string;
   emoji: string;
+  importantTopics: ImportantTopic[];
   chapters: Chapter[];
 };
 
@@ -39,6 +45,14 @@ export const SUBJECTS: Subject[] = [
     tagline: "Mechanics to Modern — every formula at your thumb",
     exam: "JEE + NEET",
     emoji: "⚛️",
+    importantTopics: [
+      { title: "Kinematics", description: "Equations of motion, projectile motion, and relative velocity are asked constantly in basics and mixed problems." },
+      { title: "Laws of Motion", description: "Free-body diagrams, friction, tension, and pulleys form the backbone of many scoring questions." },
+      { title: "Work, Energy & Power", description: "A high-yield chapter for conservation laws, collision ideas, and shortcut solving." },
+      { title: "Thermodynamics", description: "First law, heat engines, Carnot efficiency, and process-based numericals are exam favorites." },
+      { title: "Electrostatics", description: "Field, potential, capacitance, and charge interactions appear regularly in conceptual and numerical forms." },
+      { title: "Current Electricity", description: "Ohm’s law, power, series-parallel combinations, and Wheatstone bridge are must-revise topics." },
+    ],
     chapters: [
       {
         slug: "kinematics",
@@ -201,6 +215,14 @@ export const SUBJECTS: Subject[] = [
     tagline: "Reactions, mole magic & periodic patterns",
     exam: "JEE + NEET",
     emoji: "⚗️",
+    importantTopics: [
+      { title: "Mole Concept", description: "One of the most important scoring chapters for conversions, concentration terms, and stoichiometry." },
+      { title: "Atomic Structure", description: "Bohr model, quantum basics, de Broglie, and shell calculations are repeatedly tested." },
+      { title: "Chemical Bonding", description: "Shapes, hybridization, formal charge, and bond order are core concepts for the entire subject." },
+      { title: "Equilibrium", description: "Chemical equilibrium, pH, buffers, and solubility product are high-frequency problem areas." },
+      { title: "Organic GOC", description: "Resonance, inductive effect, intermediates, and acidity-basicity control many later organic chapters." },
+      { title: "Electrochemistry", description: "Nernst equation, EMF, Faraday laws, and conductivity trends are highly important for numericals." },
+    ],
     chapters: [
       {
         slug: "mole-concept",
@@ -334,6 +356,14 @@ export const SUBJECTS: Subject[] = [
     tagline: "Shortcuts that make JEE problems fall apart",
     exam: "JEE only",
     emoji: "📐",
+    importantTopics: [
+      { title: "Quadratic Equations", description: "Roots, discriminant, and Vieta-based relations are direct and repeatedly used in advanced algebra." },
+      { title: "Sequences & Series", description: "AP, GP, and sigma formulas are common in direct questions and multi-step algebra problems." },
+      { title: "Trigonometry", description: "Identities, transformations, and range-based questions make this chapter a constant revision target." },
+      { title: "Calculus", description: "Derivatives, chain rule, and standard limits are among the highest-value topics in JEE maths." },
+      { title: "Integration", description: "Standard integrals, by-parts, and definite integral properties are central to problem solving." },
+      { title: "Vectors & 3D Geometry", description: "Dot product, cross product, lines, and planes often give manageable scoring questions." },
+    ],
     chapters: [
       {
         slug: "quadratic",
@@ -469,6 +499,14 @@ export const SUBJECTS: Subject[] = [
     tagline: "NCERT essentials, mnemonics & high-yield facts",
     exam: "NEET only",
     emoji: "🧬",
+    importantTopics: [
+      { title: "Cell Biology", description: "Cell organelles, membranes, ribosomes, and cell theory are core NCERT-based questions." },
+      { title: "Biomolecules", description: "Proteins, DNA, enzymes, and basic biochemistry facts are very high-yield for NEET." },
+      { title: "Human Physiology", description: "Circulation, breathing, excretion, and hormonal control are among the most important biology units." },
+      { title: "Genetics", description: "Mendelian inheritance, linkage, and molecular genetics are repeatedly tested in conceptual form." },
+      { title: "Ecology", description: "Population interactions, succession, and ecosystem terms are memory-based and scoring." },
+      { title: "Plant Physiology", description: "Photosynthesis, respiration, water transport, and mineral nutrition appear regularly in exams." },
+    ],
     chapters: [
       {
         slug: "cell-biology",
