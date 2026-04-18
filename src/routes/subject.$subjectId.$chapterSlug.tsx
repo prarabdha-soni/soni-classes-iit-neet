@@ -4,6 +4,9 @@ import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-mo
 import { ArrowLeft, ChevronLeft, ChevronRight, Lightbulb, RotateCcw, Check, X, BrainCircuit, Flame, ShieldCheck } from "lucide-react";
 import { getChapter, getSubject } from "@/data/content";
 import { subjectGradient } from "@/components/SubjectIcon";
+import { MathExpr } from "@/components/MathExpr";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { useStreak } from "@/hooks/useStreak";
 
 export const Route = createFileRoute("/subject/$subjectId/$chapterSlug")({
   loader: ({ params }) => {
