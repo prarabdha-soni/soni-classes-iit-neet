@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VaultRouteImport } from './routes/vault'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SubjectSubjectIdRouteImport } from './routes/subject.$subjectId'
 import { Route as SubjectSubjectIdChapterSlugRouteImport } from './routes/subject.$subjectId.$chapterSlug'
 
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -39,12 +45,14 @@ const SubjectSubjectIdChapterSlugRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
+  '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
+  '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
@@ -52,6 +60,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
+  '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
@@ -60,18 +69,21 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/search'
+    | '/vault'
     | '/subject/$subjectId'
     | '/subject/$subjectId/$chapterSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/search'
+    | '/vault'
     | '/subject/$subjectId'
     | '/subject/$subjectId/$chapterSlug'
   id:
     | '__root__'
     | '/'
     | '/search'
+    | '/vault'
     | '/subject/$subjectId'
     | '/subject/$subjectId/$chapterSlug'
   fileRoutesById: FileRoutesById
@@ -79,11 +91,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SearchRoute: typeof SearchRoute
+  VaultRoute: typeof VaultRoute
   SubjectSubjectIdRoute: typeof SubjectSubjectIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -129,6 +149,7 @@ const SubjectSubjectIdRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SearchRoute: SearchRoute,
+  VaultRoute: VaultRoute,
   SubjectSubjectIdRoute: SubjectSubjectIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport

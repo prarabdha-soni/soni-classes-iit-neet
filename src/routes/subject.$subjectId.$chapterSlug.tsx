@@ -4,6 +4,9 @@ import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-mo
 import { ArrowLeft, ChevronLeft, ChevronRight, Lightbulb, RotateCcw, Check, X, BrainCircuit, Flame, ShieldCheck } from "lucide-react";
 import { getChapter, getSubject } from "@/data/content";
 import { subjectGradient } from "@/components/SubjectIcon";
+import { MathExpr } from "@/components/MathExpr";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { useStreak } from "@/hooks/useStreak";
 
 export const Route = createFileRoute("/subject/$subjectId/$chapterSlug")({
   loader: ({ params }) => {
@@ -140,6 +143,7 @@ function ChapterPage() {
 }
 
 function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; subjectId: string }) {
+  const { addXp } = useStreak();
   const [deck, setDeck] = useState(() => chapter.formulas.map((formula) => formula.id));
   const [knownIds, setKnownIds] = useState<string[]>([]);
   const [unknownIds, setUnknownIds] = useState<string[]>([]);
@@ -177,8 +181,10 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
 
     if (outcome === "known") {
       setKnownIds((prev) => (prev.includes(currentFormula.id) ? prev : [...prev, currentFormula.id]));
+      addXp(5);
     } else {
       setUnknownIds((prev) => (prev.includes(currentFormula.id) ? prev : [...prev, currentFormula.id]));
+      addXp(2);
     }
 
     setDeck((prev) => prev.slice(1));
@@ -243,10 +249,13 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
               <div key={formula.id} className="card-soft rounded-2xl p-4">
                 <div className="flex items-start gap-3">
                   <div className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${subjectGradient(subjectId as never)}`} />
-                  <div>
-                    <h3 className="font-semibold">{formula.title}</h3>
-                    <div className="mt-2 rounded-xl border border-border bg-background/60 px-3 py-2 font-mono text-sm text-primary">
-                      {formula.expression}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold">{formula.title}</h3>
+                      <BookmarkButton subjectId={subjectId} chapterSlug={chapter.slug} formulaId={formula.id} size="sm" />
+                    </div>
+                    <div className="mt-2 overflow-x-auto rounded-xl border border-border bg-background/60 px-3 py-2 text-primary">
+                      <MathExpr latex={formula.latex} expression={formula.expression} />
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground">{formula.trick ?? formula.description ?? "Revise this once more for better recall."}</p>
                   </div>
@@ -320,6 +329,7 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
                 key={currentFormula.id}
                 formula={currentFormula}
                 subjectId={subjectId}
+                chapterSlug={chapter.slug}
                 onSwipe={moveFormula}
                 onTestMe={() => openTestFor(currentFormula.id)}
               />
@@ -343,11 +353,13 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
 function SwipeCard({
   formula,
   subjectId,
+  chapterSlug,
   onSwipe,
   onTestMe,
 }: {
   formula: ChapterData["formulas"][number];
   subjectId: string;
+  chapterSlug: string;
   onSwipe: (outcome: SwipeOutcome) => void;
   onTestMe: () => void;
 }) {
@@ -387,11 +399,14 @@ function SwipeCard({
       </motion.div>
 
       <div className="flex h-full flex-col">
-        <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Swipe Card</div>
+        <div className="flex items-center justify-between">
+          <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Swipe Card</div>
+          <BookmarkButton subjectId={subjectId} chapterSlug={chapterSlug} formulaId={formula.id} size="sm" />
+        </div>
         <h3 className="mt-3 font-display text-2xl font-bold sm:text-3xl">{formula.title}</h3>
         <div className={`mt-3 h-1.5 w-16 rounded-full ${subjectGradient(subjectId as never)}`} />
-        <div className="mt-5 rounded-2xl border border-border bg-background/60 px-4 py-4 font-mono text-lg text-primary sm:text-2xl">
-          {formula.expression}
+        <div className="mt-5 overflow-x-auto rounded-2xl border border-border bg-background/60 px-4 py-4 text-primary">
+          <MathExpr latex={formula.latex} expression={formula.expression} className="text-xl sm:text-2xl" />
         </div>
         {formula.description ? <p className="mt-4 text-sm text-muted-foreground">{formula.description}</p> : null}
         <div className="mt-4 rounded-2xl border border-accent/25 bg-accent/8 p-4">
@@ -579,7 +594,9 @@ function Flashcards({ chapter, subjectId }: { chapter: ChapterData; subjectId: s
             <div className={`h-1 w-12 rounded-full mb-4 ${subjectGradient(subjectId as never)}`} />
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Formula</div>
             <h3 className="mt-2 font-display text-xl text-center">{card.title}</h3>
-            <div className="mt-4 font-mono text-2xl sm:text-3xl text-primary text-center">{card.expression}</div>
+            <div className="mt-4 overflow-x-auto px-4 text-primary text-center">
+              <MathExpr latex={card.latex} expression={card.expression} className="text-2xl sm:text-3xl" />
+            </div>
             <div className="mt-6 text-[11px] text-muted-foreground">Tap for trick →</div>
           </div>
           {/* Back */}
@@ -610,6 +627,7 @@ function Flashcards({ chapter, subjectId }: { chapter: ChapterData; subjectId: s
 }
 
 function Quiz({ chapter, subjectId }: { chapter: ChapterData; subjectId: string }) {
+  const { addXp } = useStreak();
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -621,7 +639,10 @@ function Quiz({ chapter, subjectId }: { chapter: ChapterData; subjectId: string 
   const choose = (idx: number) => {
     if (picked !== null) return;
     setPicked(idx);
-    if (idx === q.answer) setScore((s) => s + 1);
+    if (idx === q.answer) {
+      setScore((s) => s + 1);
+      addXp(10);
+    }
   };
   const next = () => {
     if (i + 1 >= chapter.quiz.length) { setDone(true); return; }
