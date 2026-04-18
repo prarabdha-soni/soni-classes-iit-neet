@@ -1,7 +1,17 @@
-import pkg from "react-katex";
+import * as ReactKatex from "react-katex";
 import "katex/dist/katex.min.css";
 
-const { InlineMath, BlockMath } = pkg;
+// react-katex is a CommonJS module in some bundling paths and ESM in others.
+// Using namespace import works for both: named exports land on ReactKatex,
+// and a CJS interop default lands on ReactKatex.default.
+const InlineMath =
+  (ReactKatex as { InlineMath?: typeof ReactKatex.InlineMath }).InlineMath ??
+  (ReactKatex as unknown as { default: { InlineMath: typeof ReactKatex.InlineMath } }).default
+    ?.InlineMath;
+const BlockMath =
+  (ReactKatex as { BlockMath?: typeof ReactKatex.BlockMath }).BlockMath ??
+  (ReactKatex as unknown as { default: { BlockMath: typeof ReactKatex.BlockMath } }).default
+    ?.BlockMath;
 
 /**
  * Renders a math expression. If `latex` is provided, render it via KaTeX.
@@ -18,7 +28,7 @@ export function MathExpr({
   block?: boolean;
   className?: string;
 }) {
-  if (latex && latex.trim().length > 0) {
+  if (latex && latex.trim().length > 0 && InlineMath && BlockMath) {
     try {
       return (
         <span className={className}>
