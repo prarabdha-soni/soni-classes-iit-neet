@@ -8,7 +8,8 @@ export type ImportantTopic = {
 export type Formula = {
   id: string;
   title: string;
-  expression: string; // plain-text formula (we render in mono)
+  expression: string; // plain-text fallback
+  latex?: string; // KaTeX source — preferred for rendering
   description?: string;
   trick?: string;
 };
