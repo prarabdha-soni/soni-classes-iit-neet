@@ -594,7 +594,9 @@ function Flashcards({ chapter, subjectId }: { chapter: ChapterData; subjectId: s
             <div className={`h-1 w-12 rounded-full mb-4 ${subjectGradient(subjectId as never)}`} />
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Formula</div>
             <h3 className="mt-2 font-display text-xl text-center">{card.title}</h3>
-            <div className="mt-4 font-mono text-2xl sm:text-3xl text-primary text-center">{card.expression}</div>
+            <div className="mt-4 overflow-x-auto px-4 text-primary text-center">
+              <MathExpr latex={card.latex} expression={card.expression} className="text-2xl sm:text-3xl" />
+            </div>
             <div className="mt-6 text-[11px] text-muted-foreground">Tap for trick →</div>
           </div>
           {/* Back */}
@@ -625,6 +627,7 @@ function Flashcards({ chapter, subjectId }: { chapter: ChapterData; subjectId: s
 }
 
 function Quiz({ chapter, subjectId }: { chapter: ChapterData; subjectId: string }) {
+  const { addXp } = useStreak();
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -636,7 +639,10 @@ function Quiz({ chapter, subjectId }: { chapter: ChapterData; subjectId: string 
   const choose = (idx: number) => {
     if (picked !== null) return;
     setPicked(idx);
-    if (idx === q.answer) setScore((s) => s + 1);
+    if (idx === q.answer) {
+      setScore((s) => s + 1);
+      addXp(10);
+    }
   };
   const next = () => {
     if (i + 1 >= chapter.quiz.length) { setDone(true); return; }
