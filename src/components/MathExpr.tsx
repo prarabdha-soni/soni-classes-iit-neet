@@ -1,5 +1,7 @@
-import { InlineMath, BlockMath } from "react-katex";
+import pkg from "react-katex";
 import "katex/dist/katex.min.css";
+
+const { InlineMath, BlockMath } = pkg;
 
 /**
  * Renders a math expression. If `latex` is provided, render it via KaTeX.
