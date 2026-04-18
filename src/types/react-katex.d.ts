@@ -7,4 +7,9 @@ declare module "react-katex" {
   }
   export const InlineMath: React.FC<KatexProps>;
   export const BlockMath: React.FC<KatexProps>;
+  const _default: {
+    InlineMath: React.FC<KatexProps>;
+    BlockMath: React.FC<KatexProps>;
+  };
+  export default _default;
 }
