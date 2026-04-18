@@ -329,6 +329,7 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
                 key={currentFormula.id}
                 formula={currentFormula}
                 subjectId={subjectId}
+                chapterSlug={chapter.slug}
                 onSwipe={moveFormula}
                 onTestMe={() => openTestFor(currentFormula.id)}
               />
@@ -352,11 +353,13 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
 function SwipeCard({
   formula,
   subjectId,
+  chapterSlug,
   onSwipe,
   onTestMe,
 }: {
   formula: ChapterData["formulas"][number];
   subjectId: string;
+  chapterSlug: string;
   onSwipe: (outcome: SwipeOutcome) => void;
   onTestMe: () => void;
 }) {
@@ -396,11 +399,14 @@ function SwipeCard({
       </motion.div>
 
       <div className="flex h-full flex-col">
-        <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Swipe Card</div>
+        <div className="flex items-center justify-between">
+          <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Swipe Card</div>
+          <BookmarkButton subjectId={subjectId} chapterSlug={chapterSlug} formulaId={formula.id} size="sm" />
+        </div>
         <h3 className="mt-3 font-display text-2xl font-bold sm:text-3xl">{formula.title}</h3>
         <div className={`mt-3 h-1.5 w-16 rounded-full ${subjectGradient(subjectId as never)}`} />
-        <div className="mt-5 rounded-2xl border border-border bg-background/60 px-4 py-4 font-mono text-lg text-primary sm:text-2xl">
-          {formula.expression}
+        <div className="mt-5 overflow-x-auto rounded-2xl border border-border bg-background/60 px-4 py-4 text-primary">
+          <MathExpr latex={formula.latex} expression={formula.expression} className="text-xl sm:text-2xl" />
         </div>
         {formula.description ? <p className="mt-4 text-sm text-muted-foreground">{formula.description}</p> : null}
         <div className="mt-4 rounded-2xl border border-accent/25 bg-accent/8 p-4">
