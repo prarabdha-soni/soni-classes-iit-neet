@@ -143,6 +143,7 @@ function ChapterPage() {
 }
 
 function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; subjectId: string }) {
+  const { addXp } = useStreak();
   const [deck, setDeck] = useState(() => chapter.formulas.map((formula) => formula.id));
   const [knownIds, setKnownIds] = useState<string[]>([]);
   const [unknownIds, setUnknownIds] = useState<string[]>([]);
@@ -180,8 +181,10 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
 
     if (outcome === "known") {
       setKnownIds((prev) => (prev.includes(currentFormula.id) ? prev : [...prev, currentFormula.id]));
+      addXp(5);
     } else {
       setUnknownIds((prev) => (prev.includes(currentFormula.id) ? prev : [...prev, currentFormula.id]));
+      addXp(2);
     }
 
     setDeck((prev) => prev.slice(1));
@@ -246,10 +249,13 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
               <div key={formula.id} className="card-soft rounded-2xl p-4">
                 <div className="flex items-start gap-3">
                   <div className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${subjectGradient(subjectId as never)}`} />
-                  <div>
-                    <h3 className="font-semibold">{formula.title}</h3>
-                    <div className="mt-2 rounded-xl border border-border bg-background/60 px-3 py-2 font-mono text-sm text-primary">
-                      {formula.expression}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold">{formula.title}</h3>
+                      <BookmarkButton subjectId={subjectId} chapterSlug={chapter.slug} formulaId={formula.id} size="sm" />
+                    </div>
+                    <div className="mt-2 overflow-x-auto rounded-xl border border-border bg-background/60 px-3 py-2 text-primary">
+                      <MathExpr latex={formula.latex} expression={formula.expression} />
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground">{formula.trick ?? formula.description ?? "Revise this once more for better recall."}</p>
                   </div>
