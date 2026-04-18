@@ -79,7 +79,7 @@ function SubjectPage() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          {subject.importantTopics.map((topic, i) => (
+          {subject.importantTopics.map((topic: typeof subject.importantTopics[number], i: number) => (
             <motion.div
               key={topic.title}
               initial={{ opacity: 0, y: 10 }}
