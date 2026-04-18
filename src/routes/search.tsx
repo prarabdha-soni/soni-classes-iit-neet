@@ -3,6 +3,8 @@ import { useMemo, useState, useEffect } from "react";
 import { Search, ArrowRight } from "lucide-react";
 import { searchAll } from "@/data/content";
 import { SubjectBadge } from "@/components/SubjectIcon";
+import { MathExpr } from "@/components/MathExpr";
+import { BookmarkButton } from "@/components/BookmarkButton";
 
 type SearchParams = { q: string };
 
@@ -61,22 +63,25 @@ function SearchPage() {
       ) : (
         <ul className="mt-5 grid gap-3">
           {hits.map((h) => (
-            <li key={`${h.subject.id}-${h.chapter.slug}-${h.formula.id}`}>
-              <Link
-                to="/subject/$subjectId/$chapterSlug"
-                params={{ subjectId: h.subject.id, chapterSlug: h.chapter.slug }}
-                className="card-soft rounded-2xl p-4 flex items-center gap-3 hover:border-primary/40 transition-colors"
-              >
+            <li key={`${h.subject.id}-${h.chapter.slug}-${h.formula.id}`} className="card-soft rounded-2xl p-4">
+              <div className="flex items-start gap-3">
                 <SubjectBadge id={h.subject.id} emoji={h.subject.emoji} size="sm" />
-                <div className="min-w-0 flex-1">
+                <Link
+                  to="/subject/$subjectId/$chapterSlug"
+                  params={{ subjectId: h.subject.id, chapterSlug: h.chapter.slug }}
+                  className="min-w-0 flex-1 hover:text-primary"
+                >
                   <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                     {h.subject.name} · {h.chapter.title}
                   </div>
                   <div className="font-semibold truncate">{h.formula.title}</div>
-                  <div className="font-mono text-xs text-primary truncate">{h.formula.expression}</div>
-                </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground" />
-              </Link>
+                  <div className="mt-1 overflow-x-auto text-primary">
+                    <MathExpr latex={h.formula.latex} expression={h.formula.expression} className="text-sm" />
+                  </div>
+                </Link>
+                <BookmarkButton subjectId={h.subject.id} chapterSlug={h.chapter.slug} formulaId={h.formula.id} size="sm" />
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
+              </div>
             </li>
           ))}
         </ul>
