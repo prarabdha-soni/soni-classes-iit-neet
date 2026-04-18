@@ -10,6 +10,9 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Lightbulb } from "lucide-react";
 import { getSubject, type Formula } from "@/data/content";
 import { subjectGradient } from "@/components/SubjectIcon";
+import { MathExpr } from "@/components/MathExpr";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { useStreak } from "@/hooks/useStreak";
 
 type HomeFormula = Formula & { chapterSlug: string; chapterTitle: string };
 type HomeBinaryQuestion = {
@@ -60,6 +63,7 @@ function Index() {
   );
   const [deck, setDeck] = useState<HomeFormula[]>(formulas);
   const [swipeDirection, setSwipeDirection] = useState<SwipeDirection>(null);
+  const { addXp } = useStreak();
 
   if (!physics) {
     return null;
@@ -71,6 +75,7 @@ function Index() {
   const resetDeck = () => setDeck(formulas);
   const swipe = (direction: Exclude<SwipeDirection, null>) => {
     setSwipeDirection(direction);
+    addXp(direction === "right" ? 5 : 2);
     setDeck((prev) => prev.slice(1));
   };
 
@@ -251,13 +256,21 @@ function HomeSwipeCard({
         Known
       </motion.div>
       <div className="flex h-full min-h-0 flex-col">
-        <div className="shrink-0 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-          {formula.chapterTitle}
+        <div className="flex shrink-0 items-center justify-between">
+          <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+            {formula.chapterTitle}
+          </div>
+          <BookmarkButton
+            subjectId="physics"
+            chapterSlug={formula.chapterSlug}
+            formulaId={formula.id}
+            size="sm"
+          />
         </div>
         <h2 className="mt-3 shrink-0 font-display text-3xl font-bold">{formula.title}</h2>
         <div className={`mt-4 h-1.5 w-16 shrink-0 rounded-full ${subjectGradient("physics")}`} />
-        <div className="mt-6 shrink-0 rounded-2xl border border-border bg-background/60 px-4 py-5 font-mono text-xl text-primary sm:text-3xl">
-          {formula.expression}
+        <div className="mt-6 shrink-0 overflow-x-auto rounded-2xl border border-border bg-background/60 px-4 py-5 text-primary">
+          <MathExpr latex={formula.latex} expression={formula.expression} className="text-xl sm:text-3xl" />
         </div>
 
         <div
