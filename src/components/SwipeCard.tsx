@@ -6,7 +6,7 @@ import {
   type Variants,
 } from "framer-motion";
 import { useMemo, useState } from "react";
-import { Lightbulb, Sparkles, X, Check } from "lucide-react";
+import { Lightbulb, Sparkles } from "lucide-react";
 import type { Formula } from "@/data/content";
 import { MathExpr } from "@/components/MathExpr";
 import { BookmarkButton } from "@/components/BookmarkButton";
@@ -248,24 +248,11 @@ export function SwipeCard({
           </AnimatePresence>
         </div>
 
-        {/* Action bar */}
-        <div className="mt-4 flex shrink-0 items-center justify-center gap-3 pt-1">
-          <button
-            type="button"
-            aria-label="Still learning"
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSwipe("left");
-            }}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-destructive/40 bg-destructive/10 text-destructive transition-all hover:scale-105 hover:border-destructive hover:bg-destructive/20"
-          >
-            <X className="h-5 w-5" strokeWidth={2.5} />
-          </button>
-
+        <div className="mt-4 flex shrink-0 flex-col items-center gap-2 pt-1">
           <button
             type="button"
             aria-label="Open test"
+            title="Test"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
@@ -273,25 +260,12 @@ export function SwipeCard({
             }}
             className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-accent/50 bg-accent/15 font-display text-xl font-black text-accent shadow-[0_4px_16px_rgba(0,0,0,0.3)] transition-all hover:scale-105 hover:border-accent hover:bg-accent/25"
           >
-            ?
+            T
           </button>
-
-          <button
-            type="button"
-            aria-label="Formula known"
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSwipe("right");
-            }}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-primary transition-all hover:scale-105 hover:border-primary hover:bg-primary/20"
-          >
-            <Check className="h-5 w-5" strokeWidth={2.5} />
-          </button>
+          <p className="text-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            Swipe the card • T opens quick test
+          </p>
         </div>
-        <p className="mt-2 shrink-0 text-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          Swipe or tap • ? for quick test
-        </p>
       </div>
     </motion.div>
   );
