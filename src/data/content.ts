@@ -1,4 +1,4 @@
-export type SubjectId = "physics";
+export type SubjectId = "physics" | "chemistry" | "mathematics" | "biology";
 
 export type ImportantTopic = {
   title: string;
@@ -206,6 +206,130 @@ export const SUBJECTS: Subject[] = [
         quiz: [
           { q: "Bohr energy of H in n=2:", options: ["−13.6 eV", "−6.8 eV", "−3.4 eV", "−1.5 eV"], answer: 2 },
           { q: "de Broglie λ depends on:", options: ["Charge", "Momentum", "Spin", "Mass only"], answer: 1 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "chemistry",
+    name: "Chemistry",
+    tagline: "Reactions, mole concept & periodic patterns — clean and quick",
+    exam: "JEE + NEET",
+    emoji: "🧪",
+    importantTopics: [
+      { title: "Mole Concept", description: "Stoichiometry, limiting reagent and gas laws — non-negotiable basics." },
+      { title: "Chemical Bonding", description: "VSEPR, hybridisation, MO theory — high-yield conceptual scoring." },
+      { title: "Thermodynamics", description: "ΔH, ΔS, ΔG and spontaneity — frequently asked numericals." },
+      { title: "Equilibrium", description: "Kc, Kp, Le Chatelier and ionic equilibria appear every year." },
+      { title: "Organic — GOC", description: "Inductive, mesomeric, hyperconjugation and stability ranking." },
+      { title: "Coordination Compounds", description: "IUPAC naming, isomerism, CFT and magnetic moment." },
+    ],
+    chapters: [
+      {
+        slug: "mole-concept",
+        title: "Mole Concept",
+        emoji: "⚗️",
+        formulas: [
+          { id: "mc-1", latex: "n = \\dfrac{m}{M}", title: "Moles from mass", expression: "n = m / M", trick: "M = molar mass in g/mol." },
+          { id: "mc-2", latex: "N = n \\cdot N_{A}", title: "Number of particles", expression: "N = n × Nₐ", trick: "Nₐ = 6.022 × 10²³." },
+          { id: "mc-3", latex: "M = \\dfrac{w \\cdot 1000}{V_{mL}}", title: "Molarity", expression: "M = (w × 1000) / (M·V_mL)", trick: "Volume in mL, mass in g." },
+        ],
+        quiz: [
+          { q: "Moles in 18 g of water:", options: ["0.5", "1", "2", "18"], answer: 1 },
+        ],
+      },
+      {
+        slug: "chemical-bonding",
+        title: "Chemical Bonding",
+        emoji: "🔗",
+        formulas: [
+          { id: "cb-1", latex: "\\text{B.O.} = \\dfrac{N_{b} - N_{a}}{2}", title: "Bond order (MOT)", expression: "B.O. = (Nb − Na)/2", trick: "Higher BO → shorter, stronger bond." },
+          { id: "cb-2", latex: "\\mu = q \\cdot d", title: "Dipole moment", expression: "μ = q × d", trick: "1 Debye = 3.33 × 10⁻³⁰ C·m." },
+        ],
+        quiz: [
+          { q: "Bond order of O₂:", options: ["1", "1.5", "2", "3"], answer: 2 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "mathematics",
+    name: "Mathematics",
+    tagline: "Tricks for calculus, algebra & coordinate geometry",
+    exam: "JEE only",
+    emoji: "📐",
+    importantTopics: [
+      { title: "Quadratic Equations", description: "Roots, discriminant, sum/product — base of higher algebra." },
+      { title: "Sequences & Series", description: "AP, GP, HP and special series sums." },
+      { title: "Trigonometry", description: "Identities, inverse trig and equations." },
+      { title: "Coordinate Geometry", description: "Straight line, circle, conic sections." },
+      { title: "Calculus", description: "Limits, derivatives, integration and applications." },
+      { title: "Vectors & 3D", description: "Dot/cross product, plane, line equations." },
+    ],
+    chapters: [
+      {
+        slug: "quadratic-equations",
+        title: "Quadratic Equations",
+        emoji: "🧮",
+        formulas: [
+          { id: "qe-1", latex: "x = \\dfrac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}", title: "Quadratic formula", expression: "x = (−b ± √(b²−4ac))/2a", trick: "D = b²−4ac decides nature of roots." },
+          { id: "qe-2", latex: "\\alpha + \\beta = -\\dfrac{b}{a},\\; \\alpha\\beta = \\dfrac{c}{a}", title: "Sum & product of roots", expression: "α+β = −b/a, αβ = c/a", trick: "Vieta's — instant equation building." },
+        ],
+        quiz: [
+          { q: "Sum of roots of 2x²−5x+3:", options: ["5/2", "−5/2", "3/2", "−3/2"], answer: 0 },
+        ],
+      },
+      {
+        slug: "calculus",
+        title: "Calculus",
+        emoji: "∫",
+        formulas: [
+          { id: "cal-1", latex: "\\dfrac{d}{dx}(x^{n}) = n x^{n-1}", title: "Power rule", expression: "d/dx(xⁿ) = n xⁿ⁻¹", trick: "Bring power down, drop by 1." },
+          { id: "cal-2", latex: "\\int x^{n}\\,dx = \\dfrac{x^{n+1}}{n+1} + C,\\; n\\ne -1", title: "Power integral", expression: "∫xⁿ dx = xⁿ⁺¹/(n+1) + C", trick: "Add 1, divide by new power." },
+        ],
+        quiz: [
+          { q: "d/dx(sin x) =", options: ["cos x", "−cos x", "−sin x", "tan x"], answer: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "biology",
+    name: "Biology",
+    tagline: "Diagrams, definitions & one-liners for NEET",
+    exam: "NEET only",
+    emoji: "🧬",
+    importantTopics: [
+      { title: "Cell Biology", description: "Cell organelles, division and biomolecules." },
+      { title: "Genetics", description: "Mendelian inheritance, linkage and molecular basis." },
+      { title: "Human Physiology", description: "All systems — high weightage in NEET." },
+      { title: "Plant Physiology", description: "Photosynthesis, respiration, transport." },
+      { title: "Ecology", description: "Population, ecosystem and biodiversity." },
+      { title: "Biotechnology", description: "Tools, applications and bioethics." },
+    ],
+    chapters: [
+      {
+        slug: "cell-biology",
+        title: "Cell Biology",
+        emoji: "🧫",
+        formulas: [
+          { id: "bio-1", title: "Cell theory", expression: "All living things are made of cells; cells are basic units of life; cells arise from pre-existing cells.", trick: "Schleiden, Schwann, Virchow — SSV." },
+          { id: "bio-2", title: "Mitochondria", expression: "Powerhouse of the cell — site of aerobic respiration; double membrane; own DNA.", trick: "Cristae increase surface area for ATP synthesis." },
+        ],
+        quiz: [
+          { q: "Powerhouse of the cell:", options: ["Nucleus", "Ribosome", "Mitochondria", "Lysosome"], answer: 2 },
+        ],
+      },
+      {
+        slug: "genetics",
+        title: "Genetics",
+        emoji: "🧬",
+        formulas: [
+          { id: "gen-1", title: "Mendel's laws", expression: "Law of dominance, segregation, independent assortment.", trick: "DSI — easy to recall." },
+          { id: "gen-2", title: "DNA structure", expression: "Double helix, antiparallel, A-T (2H), G-C (3H bonds).", trick: "Chargaff: A=T, G=C." },
+        ],
+        quiz: [
+          { q: "DNA base pairing G ≡ ?:", options: ["A", "T", "C", "U"], answer: 2 },
         ],
       },
     ],

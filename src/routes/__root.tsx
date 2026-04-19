@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { AppHeader } from "@/components/AppHeader";
+import { BottomNav } from "@/components/BottomNav";
 
 import appCss from "../styles.css?url";
 
@@ -81,17 +82,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
       <AppHeader />
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="border-t border-border mt-16">
-        <div className="mx-auto max-w-6xl px-4 py-6 text-xs text-muted-foreground flex items-center justify-between">
-          <span>© Soni Classes</span>
-          <span>Made for Indian aspirants 🇮🇳</span>
-        </div>
-      </footer>
+      <BottomNav />
     </div>
   );
 }
