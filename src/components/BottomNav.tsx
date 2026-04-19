@@ -12,7 +12,7 @@ const tabs = [
   {
     to: "/formulas",
     label: "Formula",
-    caption: "Chapters",
+    caption: "Swipe",
     Icon: Sigma,
     activeOptions: { exact: false } as const,
   },

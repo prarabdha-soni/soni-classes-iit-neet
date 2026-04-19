@@ -55,21 +55,21 @@ export function QuizSwipeCard({
       animate="animate"
       exit="exit"
       custom={swipeExitCustom}
-      drag={revealed ? "x" : false}
+      drag="x"
       dragElastic={0.12}
       dragMomentum={false}
       dragTransition={{ power: 0.8, timeConstant: 120 }}
       style={{ x, rotate }}
       onDragEnd={(_, info) => {
-        if (info.offset.x > 110 || info.velocity.x > 520) {
-          onSwipe("right", isCorrect);
+        const goRight = info.offset.x > 110 || info.velocity.x > 520;
+        const goLeft = info.offset.x < -110 || info.velocity.x < -520;
+        if (!goRight && !goLeft) {
+          x.set(0);
           return;
         }
-        if (info.offset.x < -110 || info.velocity.x < -520) {
-          onSwipe("left", isCorrect);
-          return;
-        }
-        x.set(0);
+        const dir = goRight ? "right" : "left";
+        const wasCorrect = revealed ? isCorrect : false;
+        onSwipe(dir, wasCorrect);
       }}
       transition={{ type: "spring", stiffness: 520, damping: 38 }}
       className="absolute inset-0 cursor-grab touch-none overscroll-x-contain overflow-hidden rounded-[1.85rem] border border-white/10 bg-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] will-change-transform select-none active:cursor-grabbing"
@@ -81,23 +81,18 @@ export function QuizSwipeCard({
         style={{ background: "var(--gradient-physics)" }}
       />
 
-      {/* Swipe stamps — only after answering */}
-      {revealed ? (
-        <>
-          <motion.div
-            style={{ opacity: skipOpacity }}
-            className="pointer-events-none absolute left-6 top-16 z-20 -rotate-[14deg] rounded-md border-[3px] border-destructive px-3 py-1 font-display text-xl font-black uppercase tracking-[0.18em] text-destructive"
-          >
-            Review
-          </motion.div>
-          <motion.div
-            style={{ opacity: nextOpacity }}
-            className="pointer-events-none absolute right-6 top-16 z-20 rotate-[14deg] rounded-md border-[3px] border-primary px-3 py-1 font-display text-xl font-black uppercase tracking-[0.18em] text-primary"
-          >
-            Got It
-          </motion.div>
-        </>
-      ) : null}
+      <motion.div
+        style={{ opacity: skipOpacity }}
+        className="pointer-events-none absolute left-6 top-16 z-20 -rotate-[14deg] rounded-md border-[3px] border-destructive px-3 py-1 font-display text-xl font-black uppercase tracking-[0.18em] text-destructive"
+      >
+        {revealed ? "Review" : "Skip"}
+      </motion.div>
+      <motion.div
+        style={{ opacity: nextOpacity }}
+        className="pointer-events-none absolute right-6 top-16 z-20 rotate-[14deg] rounded-md border-[3px] border-primary px-3 py-1 font-display text-xl font-black uppercase tracking-[0.18em] text-primary"
+      >
+        {revealed ? "Got It" : "Next"}
+      </motion.div>
 
       <div className="relative flex h-full min-h-0 flex-col p-5 sm:p-6">
         {/* Header */}
@@ -199,7 +194,9 @@ export function QuizSwipeCard({
 
         {/* Footer hint */}
         <p className="mt-3 shrink-0 text-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          {revealed ? "Swipe right if you got it • Left to review" : "Tap an option to reveal"}
+          {revealed
+            ? "Swipe right = got it · left = review later"
+            : "Tap an option to reveal · or swipe to skip this card"}
         </p>
       </div>
     </motion.div>
