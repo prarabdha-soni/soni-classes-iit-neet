@@ -39,11 +39,14 @@ export type Subject = {
   chapters: Chapter[];
 };
 
+/** Home page revision stacks (order of sections). */
+export const HOME_SUBJECT_ORDER: SubjectId[] = ["physics", "chemistry", "mathematics", "biology"];
+
 export const SUBJECTS: Subject[] = [
   {
     id: "physics",
     name: "Physics",
-    tagline: "Mechanics to Modern — every formula at your thumb",
+    tagline: "Revise Faster. Score Higher.",
     exam: "JEE + NEET",
     emoji: "⚛️",
     importantTopics: [
@@ -213,7 +216,7 @@ export const SUBJECTS: Subject[] = [
   {
     id: "chemistry",
     name: "Chemistry",
-    tagline: "Reactions, mole concept & periodic patterns — clean and quick",
+    tagline: "Revise Faster. Score Higher.",
     exam: "JEE + NEET",
     emoji: "🧪",
     importantTopics: [
@@ -245,17 +248,79 @@ export const SUBJECTS: Subject[] = [
         formulas: [
           { id: "cb-1", latex: "\\text{B.O.} = \\dfrac{N_{b} - N_{a}}{2}", title: "Bond order (MOT)", expression: "B.O. = (Nb − Na)/2", trick: "Higher BO → shorter, stronger bond." },
           { id: "cb-2", latex: "\\mu = q \\cdot d", title: "Dipole moment", expression: "μ = q × d", trick: "1 Debye = 3.33 × 10⁻³⁰ C·m." },
+          { id: "cb-3", latex: "\\chi = \\dfrac{1}{2}(IE + EA)", title: "Mulliken electronegativity", expression: "χ ≈ ½(IE + EA)", trick: "Higher χ → stronger pull on bonding electrons." },
         ],
         quiz: [
           { q: "Bond order of O₂:", options: ["1", "1.5", "2", "3"], answer: 2 },
         ],
       },
+      {
+        slug: "atomic-structure",
+        title: "Atomic Structure",
+        emoji: "⚛️",
+        formulas: [
+          { id: "as-1", latex: "E = h\\nu", title: "Planck relation", expression: "E = hν", trick: "Links photon energy to frequency." },
+          { id: "as-2", latex: "\\dfrac{1}{\\lambda} = R_{H}\\left(\\dfrac{1}{n_{1}^{2}} - \\dfrac{1}{n_{2}^{2}}\\right)", title: "Rydberg (H spectrum)", expression: "1/λ = R_H(1/n₁² − 1/n₂²)", trick: "R_H ≈ 1.097 × 10⁷ m⁻¹." },
+          { id: "as-3", latex: "\\lambda = \\dfrac{h}{mv}", title: "de Broglie (chem context)", expression: "λ = h/(mv)", trick: "Smaller mass → larger λ for same speed." },
+        ],
+        quiz: [{ q: "Rydberg formula applies best to:", options: ["All atoms equally", "Hydrogen-like species", "Metals only", "Liquids"], answer: 1 }],
+      },
+      {
+        slug: "gaseous-state",
+        title: "Gaseous State",
+        emoji: "💨",
+        formulas: [
+          { id: "gas-1", latex: "PV = nRT", title: "Ideal gas equation", expression: "PV = nRT", trick: "T in kelvin; R = 0.0821 L·atm/(mol·K) or 8.314 J/(mol·K)." },
+          { id: "gas-2", latex: "P_{\\text{total}} = P_{1} + P_{2} + \\cdots", title: "Dalton’s law", expression: "P_total = P₁ + P₂ + …", trick: "Non-reacting gases at same V and T." },
+        ],
+        quiz: [{ q: "1 mol ideal gas at STP occupies about:", options: ["11.2 L", "22.4 L", "44.8 L", "2.24 L"], answer: 1 }],
+      },
+      {
+        slug: "chemical-thermodynamics",
+        title: "Chemical Thermodynamics",
+        emoji: "🔥",
+        formulas: [
+          { id: "ct-1", latex: "\\Delta G = \\Delta H - T\\Delta S", title: "Gibbs free energy", expression: "ΔG = ΔH − TΔS", trick: "ΔG < 0 → spontaneous at that T." },
+          { id: "ct-2", latex: "\\Delta G^{\\circ} = -RT\\ln K", title: "Standard ΔG and K", expression: "ΔG° = −RT ln K", trick: "Large K → very negative ΔG°." },
+        ],
+        quiz: [{ q: "Spontaneity at low T favours:", options: ["+ΔH, +ΔS", "−ΔH, −ΔS", "−ΔH, +ΔS", "+ΔH, −ΔS"], answer: 2 }],
+      },
+      {
+        slug: "equilibrium",
+        title: "Equilibrium",
+        emoji: "⚖️",
+        formulas: [
+          { id: "eq-1", latex: "K_{c} = \\dfrac{[C]^{c}[D]^{d}}{[A]^{a}[B]^{b}}", title: "Equilibrium constant Kc", expression: "Kc = [products]/[reactants] (powers)", trick: "Exclude pure solids/liquids from expression." },
+          { id: "eq-2", latex: "K_{p} = K_{c}(RT)^{\\Delta n}", title: "Kp and Kc", expression: "K_p = K_c(RT)^Δn", trick: "Δn = gas moles products − reactants." },
+        ],
+        quiz: [{ q: "If Q < K, reaction shifts:", options: ["Left", "Right", "No shift", "Stops"], answer: 1 }],
+      },
+      {
+        slug: "electrochemistry",
+        title: "Electrochemistry",
+        emoji: "🔋",
+        formulas: [
+          { id: "el-1", latex: "E_{\\text{cell}}^{\\circ} = E_{\\text{cathode}}^{\\circ} - E_{\\text{anode}}^{\\circ}", title: "Standard cell potential", expression: "E°cell = E°cathode − E°anode", trick: "Reduction at cathode — higher E° wins as cathode." },
+          { id: "el-2", latex: "\\Delta G^{\\circ} = -nFE_{\\text{cell}}^{\\circ}", title: "ΔG° and E°cell", expression: "ΔG° = −nFE°cell", trick: "F = 96485 C/mol." },
+        ],
+        quiz: [{ q: "In galvanic cell, cathode is:", options: ["Oxidation site", "Reduction site", "Electron source", "Always Zn"], answer: 1 }],
+      },
+      {
+        slug: "organic-basics",
+        title: "Organic — Basics",
+        emoji: "🧬",
+        formulas: [
+          { id: "og-1", title: "Inductive effect", expression: "Electron withdrawal (+I reverse) along σ bonds — decays with distance.", trick: "−NO₂ is strong −I; −CH₃ is weak +I." },
+          { id: "og-2", title: "Markovnikov’s rule", expression: "In HX addition to unsymmetrical alkene, H attaches to carbon with more hydrogens.", trick: "Think ‘rich get richer’ for H (classic case)." },
+        ],
+        quiz: [{ q: "Strong −I group:", options: ["−CH₃", "−OH", "−C(CH₃)₃", "−CH₂CH₃"], answer: 1 }],
+      },
     ],
   },
   {
     id: "mathematics",
-    name: "Mathematics",
-    tagline: "Tricks for calculus, algebra & coordinate geometry",
+    name: "Maths",
+    tagline: "Revise Faster. Score Higher.",
     exam: "JEE only",
     emoji: "📐",
     importantTopics: [
@@ -286,17 +351,58 @@ export const SUBJECTS: Subject[] = [
         formulas: [
           { id: "cal-1", latex: "\\dfrac{d}{dx}(x^{n}) = n x^{n-1}", title: "Power rule", expression: "d/dx(xⁿ) = n xⁿ⁻¹", trick: "Bring power down, drop by 1." },
           { id: "cal-2", latex: "\\int x^{n}\\,dx = \\dfrac{x^{n+1}}{n+1} + C,\\; n\\ne -1", title: "Power integral", expression: "∫xⁿ dx = xⁿ⁺¹/(n+1) + C", trick: "Add 1, divide by new power." },
+          { id: "cal-3", latex: "\\dfrac{d}{dx}(\\sin x) = \\cos x", title: "Derivative of sin", expression: "d/dx(sin x) = cos x", trick: "Cos is derivative of sin; chain rule multiplies by inner d/dx." },
         ],
         quiz: [
           { q: "d/dx(sin x) =", options: ["cos x", "−cos x", "−sin x", "tan x"], answer: 0 },
         ],
+      },
+      {
+        slug: "sequences-series",
+        title: "Sequences & Series",
+        emoji: "📊",
+        formulas: [
+          { id: "ss-1", latex: "S_{n} = \\dfrac{n}{2}(2a + (n-1)d)", title: "Sum of n terms (AP)", expression: "Sₙ = n/2 (2a + (n−1)d)", trick: "Also Sₙ = n/2 (a + l) with last term l." },
+          { id: "ss-2", latex: "S_{\\infty} = \\dfrac{a}{1-r},\\; |r|<1", title: "Infinite GP sum", expression: "S∞ = a/(1−r), |r| < 1", trick: "Diverges if |r| ≥ 1." },
+        ],
+        quiz: [{ q: "Sum 1 + ½ + ¼ + … =", options: ["1", "2", "∞", "½"], answer: 1 }],
+      },
+      {
+        slug: "trigonometry",
+        title: "Trigonometry",
+        emoji: "📐",
+        formulas: [
+          { id: "tr-1", latex: "\\sin^{2}\\theta + \\cos^{2}\\theta = 1", title: "Pythagorean identity", expression: "sin²θ + cos²θ = 1", trick: "Divide by cos² → 1 + tan² = sec²." },
+          { id: "tr-2", latex: "\\sin(A\\pm B) = \\sin A\\cos B \\pm \\cos A\\sin B", title: "sin(A ± B)", expression: "sin(A±B) = sin A cos B ± cos A sin B", trick: "Same sign on both sides for sin." },
+        ],
+        quiz: [{ q: "sin 90° =", options: ["0", "1", "−1", "½"], answer: 1 }],
+      },
+      {
+        slug: "coordinate-geometry",
+        title: "Coordinate Geometry",
+        emoji: "📍",
+        formulas: [
+          { id: "cg-1", latex: "d = \\sqrt{(x_{2}-x_{1})^{2} + (y_{2}-y_{1})^{2}}", title: "Distance formula", expression: "d = √((x₂−x₁)² + (y₂−y₁)²)", trick: "3D: add (z₂−z₁)² under root." },
+          { id: "cg-2", latex: "(x-h)^{2} + (y-k)^{2} = r^{2}", title: "Circle", expression: "(x−h)² + (y−k)² = r²", trick: "(h,k) centre, r radius." },
+        ],
+        quiz: [{ q: "Centre of x² + y² − 4x = 0:", options: ["(0,0)", "(2,0)", "(−2,0)", "(0,2)"], answer: 1 }],
+      },
+      {
+        slug: "vectors-3d",
+        title: "Vectors & 3D",
+        emoji: "🧊",
+        formulas: [
+          { id: "v3-1", latex: "\\vec{a}\\cdot\\vec{b} = a_{1}b_{1}+a_{2}b_{2}+a_{3}b_{3}", title: "Dot product (components)", expression: "a·b = a₁b₁ + a₂b₂ + a₃b₃", trick: "Zero → perpendicular (non-zero vectors)." },
+          { id: "v3-2", latex: "\\vec{a}\\times\\vec{b} = \\begin{vmatrix}\\hat{i}&\\hat{j}&\\hat{k}\\\\a_{1}&a_{2}&a_{3}\\\\b_{1}&b_{2}&b_{3}\\end{vmatrix}", title: "Cross product (determinant)", expression: "a×b via 3×3 determinant", trick: "Result ⊥ to both a and b." },
+        ],
+        quiz: [{ q: "î · ĵ =", options: ["0", "1", "−1", "i"], answer: 0 }],
       },
     ],
   },
   {
     id: "biology",
     name: "Biology",
-    tagline: "Diagrams, definitions & one-liners for NEET",
+    tagline: "Revise Faster. Score Higher.",
     exam: "NEET only",
     emoji: "🧬",
     importantTopics: [
@@ -327,10 +433,51 @@ export const SUBJECTS: Subject[] = [
         formulas: [
           { id: "gen-1", title: "Mendel's laws", expression: "Law of dominance, segregation, independent assortment.", trick: "DSI — easy to recall." },
           { id: "gen-2", title: "DNA structure", expression: "Double helix, antiparallel, A-T (2H), G-C (3H bonds).", trick: "Chargaff: A=T, G=C." },
+          { id: "gen-3", title: "Central dogma", expression: "DNA → RNA (transcription) → Protein (translation).", trick: "Reverse transcriptase: RNA → DNA (exception)." },
         ],
         quiz: [
           { q: "DNA base pairing G ≡ ?:", options: ["A", "T", "C", "U"], answer: 2 },
         ],
+      },
+      {
+        slug: "photosynthesis",
+        title: "Photosynthesis",
+        emoji: "🌿",
+        formulas: [
+          { id: "ph-1", title: "Overall equation", expression: "6CO₂ + 12H₂O → C₆H₁₂O₆ + 6O₂ + 6H₂O (light, chlorophyll).", trick: "Light reactions make ATP & NADPH; Calvin cycle fixes carbon." },
+          { id: "ph-2", title: "Calvin cycle site", expression: "Stroma of chloroplast — C₃ cycle (RuBP + CO₂ → PGA).", trick: "Rubisco is the key carboxylase." },
+        ],
+        quiz: [{ q: "Calvin cycle occurs in:", options: ["Thylakoid", "Stroma", "Mitochondria", "Nucleus"], answer: 1 }],
+      },
+      {
+        slug: "respiration",
+        title: "Cellular Respiration",
+        emoji: "🔋",
+        formulas: [
+          { id: "res-1", title: "Aerobic overview", expression: "Glucose + O₂ → CO₂ + H₂O + ATP (glycolysis → Krebs → ETC).", trick: "Most ATP from oxidative phosphorylation (ETC)." },
+          { id: "res-2", title: "Net glycolysis (aerobic)", expression: "Glucose → 2 pyruvate + 2 ATP + 2 NADH (in cytosol).", trick: "Anaerobic: pyruvate → lactate or ethanol + CO₂." },
+        ],
+        quiz: [{ q: "Krebs cycle location:", options: ["Cytosol", "Outer mitochondrial membrane", "Matrix", "Stroma"], answer: 2 }],
+      },
+      {
+        slug: "human-heart",
+        title: "Human Circulation",
+        emoji: "❤️",
+        formulas: [
+          { id: "hh-1", title: "Double circulation", expression: "Pulmonary (heart–lungs) + systemic (heart–body); oxygenated and deoxygenated blood kept largely separate.", trick: "Right side pumps deoxygenated blood to lungs." },
+          { id: "hh-2", title: "Cardiac output", expression: "CO = stroke volume × heart rate (mL/min).", trick: "SV = EDV − ESV." },
+        ],
+        quiz: [{ q: "Oxygenated blood enters left atrium from:", options: ["Vena cava", "Pulmonary vein", "Pulmonary artery", "Aorta"], answer: 1 }],
+      },
+      {
+        slug: "ecology",
+        title: "Ecology",
+        emoji: "🌳",
+        formulas: [
+          { id: "eco-1", title: "Population growth (exponential)", expression: "dN/dt = rN (ideal unlimited resources).", trick: "Logistic adds carrying capacity K: dN/dt = rN(1 − N/K)." },
+          { id: "eco-2", title: "Energy flow", expression: "10% rule — roughly ~10% energy passes to next trophic level.", trick: "Most energy lost as heat at each transfer." },
+        ],
+        quiz: [{ q: "Primary producers in ecosystem:", options: ["Herbivores", "Plants & phytoplankton", "Fungi", "Bacteria only"], answer: 1 }],
       },
     ],
   },
@@ -353,7 +500,7 @@ export const searchAll = (query: string): SearchHit[] => {
   for (const subject of SUBJECTS) {
     for (const chapter of subject.chapters) {
       for (const formula of chapter.formulas) {
-        const hay = `${formula.title} ${formula.expression} ${formula.description ?? ""} ${formula.trick ?? ""} ${chapter.title}`.toLowerCase();
+        const hay = `${formula.title} ${formula.expression} ${formula.latex ?? ""} ${formula.description ?? ""} ${formula.trick ?? ""} ${chapter.title}`.toLowerCase();
         if (hay.includes(q)) hits.push({ subject, chapter, formula });
       }
     }

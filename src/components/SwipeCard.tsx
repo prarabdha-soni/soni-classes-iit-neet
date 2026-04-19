@@ -7,11 +7,32 @@ import {
 } from "framer-motion";
 import { useMemo, useState } from "react";
 import { Lightbulb, Sparkles } from "lucide-react";
-import type { Formula } from "@/data/content";
+import type { Formula, SubjectId } from "@/data/content";
 import { MathExpr } from "@/components/MathExpr";
 import { BookmarkButton } from "@/components/BookmarkButton";
 
-export type SwipeFormula = Formula & { chapterSlug: string; chapterTitle: string };
+export type SwipeFormula = Formula & {
+  chapterSlug: string;
+  chapterTitle: string;
+  subjectId: SubjectId;
+  subjectName: string;
+};
+
+const orbClass: Record<SubjectId, string> = {
+  physics: "bg-gradient-physics",
+  chemistry: "bg-gradient-to-br from-emerald-600/60 to-teal-950/40",
+  mathematics: "bg-gradient-to-br from-amber-600/60 to-orange-950/40",
+  biology: "bg-gradient-to-br from-rose-600/60 to-pink-950/40",
+};
+
+const heroFrameClass: Record<SubjectId, string> = {
+  physics: "border-primary/20 from-primary/10 via-background/60 to-accent/10",
+  chemistry:
+    "border-[color:var(--chemistry)]/35 from-emerald-500/10 via-background/60 to-teal-900/15",
+  mathematics:
+    "border-[color:var(--maths)]/35 from-amber-500/10 via-background/60 to-orange-900/15",
+  biology: "border-[color:var(--biology)]/35 from-rose-500/10 via-background/60 to-pink-900/15",
+};
 export type SwipeDirection = "left" | "right" | null;
 
 type BinaryQuestion = {
@@ -45,6 +66,7 @@ export function SwipeCard({
   onSwipe: (direction: Exclude<SwipeDirection, null>) => void;
   swipeExitCustom: SwipeDirection;
 }) {
+  const { subjectId, subjectName } = formula;
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-260, 0, 260], [-18, 0, 18]);
   const skipOpacity = useTransform(x, [-140, -40, 0], [1, 0.3, 0]);
@@ -96,8 +118,7 @@ export function SwipeCard({
 
       {/* Subtle ambient glow inside card */}
       <div
-        className="pointer-events-none absolute -top-24 -right-20 h-56 w-56 rounded-full opacity-30 blur-3xl"
-        style={{ background: "var(--gradient-physics)" }}
+        className={`pointer-events-none absolute -top-24 -right-20 h-56 w-56 rounded-full opacity-30 blur-3xl ${orbClass[subjectId]}`}
       />
 
       {/* Decision stamps */}
@@ -121,7 +142,7 @@ export function SwipeCard({
             <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5">
               <Sparkles className="h-3 w-3 text-primary" />
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
-                Physics
+                {subjectName}
               </span>
             </div>
             <p className="mt-2 truncate text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
@@ -129,7 +150,7 @@ export function SwipeCard({
             </p>
           </div>
           <BookmarkButton
-            subjectId="physics"
+            subjectId={subjectId}
             chapterSlug={formula.chapterSlug}
             formulaId={formula.id}
             size="sm"
@@ -142,7 +163,9 @@ export function SwipeCard({
         </h2>
 
         {/* Formula display — hero element */}
-        <div className="mt-5 shrink-0 overflow-x-auto rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background/60 to-accent/10 px-5 py-7 text-center text-primary shadow-inner">
+        <div
+          className={`mt-5 shrink-0 overflow-x-auto rounded-2xl border bg-gradient-to-br px-5 py-7 text-center text-primary shadow-inner ${heroFrameClass[subjectId]}`}
+        >
           <MathExpr
             latex={formula.latex}
             expression={formula.expression}
