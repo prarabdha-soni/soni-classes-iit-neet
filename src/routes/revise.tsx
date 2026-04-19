@@ -67,10 +67,10 @@ function RevisePage() {
       attempted: s.attempted + 1,
     }));
     if (wasCorrect) addXp(10);
-    window.setTimeout(() => {
+    queueMicrotask(() => {
       setIndex((i) => i + 1);
       setExitDir(null);
-    }, 240);
+    });
   };
 
   const reset = () => {
@@ -144,7 +144,7 @@ function RevisePage() {
           animate={{
             width: `${deck.length === 0 ? 0 : Math.min(100, (index / deck.length) * 100)}%`,
           }}
-          transition={{ type: "spring", stiffness: 220, damping: 28 }}
+          transition={{ type: "tween", duration: 0.18, ease: "easeOut" }}
         />
       </div>
       <div className="mt-1.5 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-muted-foreground">

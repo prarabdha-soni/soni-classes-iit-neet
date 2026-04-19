@@ -12,14 +12,14 @@ export type QuizCardItem = QuizQuestion & {
 };
 
 const cardVariants = {
-  initial: { opacity: 0, scale: 0.96, y: 18 },
+  initial: { opacity: 0, scale: 0.98, y: 10 },
   animate: { opacity: 1, scale: 1, y: 0 },
   exit: (direction: QuizSwipeDirection) => ({
     opacity: 0,
-    scale: 0.92,
-    x: direction === "left" ? -560 : direction === "right" ? 560 : 0,
-    rotate: direction === "left" ? -22 : direction === "right" ? 22 : 0,
-    transition: { duration: 0.28 },
+    scale: 0.94,
+    x: direction === "left" ? -320 : direction === "right" ? 320 : 0,
+    rotate: direction === "left" ? -14 : direction === "right" ? 14 : 0,
+    transition: { duration: 0.14, ease: "easeIn" },
   }),
 } satisfies Variants;
 
@@ -56,9 +56,9 @@ export function QuizSwipeCard({
       exit="exit"
       custom={swipeExitCustom}
       drag={revealed ? "x" : false}
-      dragElastic={0.2}
-      dragMomentum
-      dragTransition={{ bounceStiffness: 320, bounceDamping: 22 }}
+      dragElastic={0.12}
+      dragMomentum={false}
+      dragTransition={{ power: 0.8, timeConstant: 120 }}
       style={{ x, rotate }}
       onDragEnd={(_, info) => {
         if (info.offset.x > 110 || info.velocity.x > 520) {
@@ -71,7 +71,7 @@ export function QuizSwipeCard({
         }
         x.set(0);
       }}
-      transition={{ type: "spring", stiffness: 340, damping: 28 }}
+      transition={{ type: "spring", stiffness: 520, damping: 38 }}
       className="absolute inset-0 cursor-grab overflow-hidden rounded-[1.85rem] border border-white/10 bg-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] will-change-transform active:cursor-grabbing"
     >
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-hero" />

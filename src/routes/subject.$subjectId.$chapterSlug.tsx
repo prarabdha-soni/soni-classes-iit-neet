@@ -25,14 +25,6 @@ export const Route = createFileRoute("/subject/$subjectId/$chapterSlug")({
             name: "description",
             content: `${loaderData.chapter.title} formulas, tricks and a quick quiz for ${loaderData.subject.exam} preparation.`,
           },
-          {
-            property: "og:title",
-            content: `${loaderData.chapter.title} — ${loaderData.subject.name}`,
-          },
-          {
-            property: "og:description",
-            content: `Formulas, tricks & quick quiz on ${loaderData.chapter.title}.`,
-          },
         ]
       : [],
   }),
@@ -311,7 +303,7 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
               />
             ))}
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             {test && currentFormula ? (
               <FormulaTestCard
                 key={`test-${test.formulaId}`}
@@ -370,19 +362,21 @@ function SwipeCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.96, y: 14 }}
+      initial={{ opacity: 0, scale: 0.98, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.92, y: -12 }}
+      exit={{ opacity: 0, scale: 0.94, y: -8, transition: { duration: 0.14, ease: "easeIn" } }}
+      transition={{ type: "spring", stiffness: 520, damping: 38 }}
       drag="x"
-      dragElastic={0.15}
+      dragElastic={0.12}
+      dragMomentum={false}
       style={{ x, rotate }}
       onDragEnd={(_, info) => {
-        if (info.offset.x > 120) {
+        if (info.offset.x > 110 || info.velocity.x > 520) {
           onSwipe("known");
           return;
         }
 
-        if (info.offset.x < -120) {
+        if (info.offset.x < -110 || info.velocity.x < -520) {
           onSwipe("unknown");
           return;
         }

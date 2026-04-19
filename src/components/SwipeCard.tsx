@@ -44,14 +44,14 @@ type BinaryQuestion = {
 };
 
 const cardVariants = {
-  initial: { opacity: 0, scale: 0.96, y: 18 },
+  initial: { opacity: 0, scale: 0.98, y: 10 },
   animate: { opacity: 1, scale: 1, y: 0 },
   exit: (direction: SwipeDirection) => ({
     opacity: 0,
-    scale: 0.92,
-    x: direction === "left" ? -560 : direction === "right" ? 560 : 0,
-    rotate: direction === "left" ? -22 : direction === "right" ? 22 : 0,
-    transition: { duration: 0.28 },
+    scale: 0.94,
+    x: direction === "left" ? -320 : direction === "right" ? 320 : 0,
+    rotate: direction === "left" ? -14 : direction === "right" ? 14 : 0,
+    transition: { duration: 0.14, ease: "easeIn" },
   }),
 } satisfies Variants;
 
@@ -60,11 +60,14 @@ export function SwipeCard({
   formulas,
   onSwipe,
   swipeExitCustom,
+  showQuickTest = true,
 }: {
   formula: SwipeFormula;
   formulas: SwipeFormula[];
   onSwipe: (direction: Exclude<SwipeDirection, null>) => void;
   swipeExitCustom: SwipeDirection;
+  /** When false, hides the T quick-test control (e.g. home stack). */
+  showQuickTest?: boolean;
 }) {
   const { subjectId, subjectName } = formula;
   const x = useMotionValue(0);
@@ -94,10 +97,10 @@ export function SwipeCard({
       animate="animate"
       exit="exit"
       custom={swipeExitCustom}
-      drag={showQuestion ? false : "x"}
-      dragElastic={0.2}
-      dragMomentum
-      dragTransition={{ bounceStiffness: 320, bounceDamping: 22 }}
+      drag={showQuickTest && showQuestion ? false : "x"}
+      dragElastic={0.12}
+      dragMomentum={false}
+      dragTransition={{ power: 0.8, timeConstant: 120 }}
       style={{ x, rotate }}
       onDragEnd={(_, info) => {
         if (info.offset.x > 110 || info.velocity.x > 520) {
@@ -110,7 +113,7 @@ export function SwipeCard({
         }
         x.set(0);
       }}
-      transition={{ type: "spring", stiffness: 340, damping: 28 }}
+      transition={{ type: "spring", stiffness: 520, damping: 38 }}
       className="absolute inset-0 cursor-grab overflow-hidden rounded-[1.85rem] border border-white/10 bg-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] will-change-transform active:cursor-grabbing"
     >
       {/* Top gradient accent bar */}
@@ -195,100 +198,104 @@ export function SwipeCard({
             </div>
           </div>
 
-          <AnimatePresence initial={false}>
-            {showQuestion ? (
-              <motion.div
-                key="q"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.22 }}
-                className="mt-3 overflow-hidden rounded-xl border border-primary/25 bg-primary/5"
-                onPointerDown={(e) => e.stopPropagation()}
-              >
-                <div className="p-3.5">
-                  <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
-                    Quick Test
-                  </div>
-                  <p className="mt-1.5 text-sm text-foreground/90">{question.prompt}</p>
-
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    {(["left", "right"] as const).map((side) => {
-                      const text = side === "left" ? question.left : question.right;
-                      const chosen = picked === side;
-                      const correct = picked !== null && side === question.correctSide;
-                      const wrong = chosen && side !== question.correctSide;
-
-                      return (
-                        <button
-                          key={side}
-                          type="button"
-                          disabled={picked !== null}
-                          onClick={() => setPicked(side)}
-                          className={`relative flex min-h-[4.5rem] flex-col rounded-xl border px-2.5 py-2.5 text-left transition-all ${
-                            correct
-                              ? "border-primary bg-primary/15"
-                              : wrong
-                                ? "border-destructive bg-destructive/15"
-                                : "border-border bg-background/60 hover:border-primary/40 hover:bg-secondary/50"
-                          } disabled:cursor-default`}
-                        >
-                          <span className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                            {side === "left" ? "A" : "B"}
-                          </span>
-                          <span className="line-clamp-3 font-mono text-xs text-primary">
-                            {text}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {picked !== null ? (
-                    <div className="mt-3 rounded-lg border border-border bg-background/60 p-2.5">
-                      <div
-                        className={`text-xs font-bold uppercase tracking-wide ${picked === question.correctSide ? "text-primary" : "text-destructive"}`}
-                      >
-                        {picked === question.correctSide ? "✓ Correct" : "✗ Incorrect"}
-                      </div>
-                      <p className="mt-1 text-xs text-muted-foreground">{question.explain}</p>
+          {showQuickTest ? (
+            <AnimatePresence initial={false}>
+              {showQuestion ? (
+                <motion.div
+                  key="q"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="mt-3 overflow-hidden rounded-xl border border-primary/25 bg-primary/5"
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <div className="p-3.5">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
+                      Quick Test
                     </div>
-                  ) : null}
+                    <p className="mt-1.5 text-sm text-foreground/90">{question.prompt}</p>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowQuestion(false);
-                      setPicked(null);
-                    }}
-                    className="mt-2.5 w-full rounded-lg border border-border bg-background/60 py-1.5 text-xs font-semibold hover:bg-secondary/60"
-                  >
-                    Close
-                  </button>
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {(["left", "right"] as const).map((side) => {
+                        const text = side === "left" ? question.left : question.right;
+                        const chosen = picked === side;
+                        const correct = picked !== null && side === question.correctSide;
+                        const wrong = chosen && side !== question.correctSide;
+
+                        return (
+                          <button
+                            key={side}
+                            type="button"
+                            disabled={picked !== null}
+                            onClick={() => setPicked(side)}
+                            className={`relative flex min-h-[4.5rem] flex-col rounded-xl border px-2.5 py-2.5 text-left transition-all ${
+                              correct
+                                ? "border-primary bg-primary/15"
+                                : wrong
+                                  ? "border-destructive bg-destructive/15"
+                                  : "border-border bg-background/60 hover:border-primary/40 hover:bg-secondary/50"
+                            } disabled:cursor-default`}
+                          >
+                            <span className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                              {side === "left" ? "A" : "B"}
+                            </span>
+                            <span className="line-clamp-3 font-mono text-xs text-primary">
+                              {text}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {picked !== null ? (
+                      <div className="mt-3 rounded-lg border border-border bg-background/60 p-2.5">
+                        <div
+                          className={`text-xs font-bold uppercase tracking-wide ${picked === question.correctSide ? "text-primary" : "text-destructive"}`}
+                        >
+                          {picked === question.correctSide ? "✓ Correct" : "✗ Incorrect"}
+                        </div>
+                        <p className="mt-1 text-xs text-muted-foreground">{question.explain}</p>
+                      </div>
+                    ) : null}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowQuestion(false);
+                        setPicked(null);
+                      }}
+                      className="mt-2.5 w-full rounded-lg border border-border bg-background/60 py-1.5 text-xs font-semibold hover:bg-secondary/60"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          ) : null}
         </div>
 
-        <div className="mt-4 flex shrink-0 flex-col items-center gap-2 pt-1">
-          <button
-            type="button"
-            aria-label="Open test"
-            title="Test"
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => {
-              e.stopPropagation();
-              openTest();
-            }}
-            className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-accent/50 bg-accent/15 font-display text-xl font-black text-accent shadow-[0_4px_16px_rgba(0,0,0,0.3)] transition-all hover:scale-105 hover:border-accent hover:bg-accent/25"
-          >
-            T
-          </button>
-          <p className="text-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            Swipe the card • T opens quick test
-          </p>
-        </div>
+        {showQuickTest ? (
+          <div className="mt-4 flex shrink-0 flex-col items-center gap-2 pt-1">
+            <button
+              type="button"
+              aria-label="Open test"
+              title="Test"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                openTest();
+              }}
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-accent/50 bg-accent/15 font-display text-xl font-black text-accent shadow-[0_4px_16px_rgba(0,0,0,0.3)] transition-all hover:scale-105 hover:border-accent hover:bg-accent/25"
+            >
+              T
+            </button>
+            <p className="text-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              Swipe the card • T opens quick test
+            </p>
+          </div>
+        ) : null}
       </div>
     </motion.div>
   );

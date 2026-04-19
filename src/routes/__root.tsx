@@ -36,20 +36,9 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Chapter-wise tricks, shortcut formulas, mnemonics, flashcards & quick quizzes for IIT-JEE and NEET. Built for Indian students.",
+          "Chapter-wise tricks, shortcut formulas, mnemonics, flashcards and quick quizzes for IIT-JEE and NEET.",
       },
       { name: "author", content: "Soni Classes" },
-      { property: "og:title", content: "Soni Classes — JEE & NEET Tricks, Formulas & Quick Revision" },
-      {
-        property: "og:description",
-        content: "Tricks, formulas & flashcards chapter-wise for IIT-JEE and NEET aspirants.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Soni Classes — JEE & NEET Tricks, Formulas & Quick Revision" },
-      { name: "description", content: "Soni Classes is a mobile app offering quick revision tools for IIT-JEE and NEET exams." },
-      { property: "og:description", content: "Soni Classes is a mobile app offering quick revision tools for IIT-JEE and NEET exams." },
-      { name: "twitter:description", content: "Soni Classes is a mobile app offering quick revision tools for IIT-JEE and NEET exams." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -82,9 +71,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="min-h-screen flex flex-col pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
+    <div className="flex h-dvh flex-col overflow-hidden pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
       <AppHeader />
-      <main className="flex-1">
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         <Outlet />
       </main>
       <BottomNav />

@@ -18,8 +18,6 @@ export const Route = createFileRoute("/subject/$subjectId")({
             name: "description",
             content: `Chapter-wise ${loaderData.subject.name} tricks and formulas for ${loaderData.subject.exam}. ${loaderData.subject.tagline}`,
           },
-          { property: "og:title", content: `${loaderData.subject.name} — Soni Classes` },
-          { property: "og:description", content: loaderData.subject.tagline },
         ]
       : [],
   }),
