@@ -16,6 +16,12 @@ export type SwipeFormula = Formula & {
   chapterTitle: string;
   subjectId: SubjectId;
   subjectName: string;
+  /** 1-based chapter index in subject (shown as Ch 01). */
+  chapterNumber: number;
+  /** 1-based index of this formula in the chapter list. */
+  formulaIndexInChapter: number;
+  /** Total formulas in this chapter. */
+  formulasInChapter: number;
 };
 
 const orbClass: Record<SubjectId, string> = {
@@ -114,7 +120,7 @@ export function SwipeCard({
         x.set(0);
       }}
       transition={{ type: "spring", stiffness: 520, damping: 38 }}
-      className="absolute inset-0 cursor-grab overflow-hidden rounded-[1.85rem] border border-white/10 bg-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] will-change-transform active:cursor-grabbing"
+      className="absolute inset-0 cursor-grab touch-pan-y overscroll-x-contain overflow-hidden rounded-[1.85rem] border border-white/10 bg-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] will-change-transform select-none active:cursor-grabbing"
     >
       {/* Top gradient accent bar */}
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-hero" />
@@ -141,7 +147,7 @@ export function SwipeCard({
       <div className="relative flex h-full min-h-0 flex-col p-5 sm:p-6">
         {/* Header */}
         <div className="flex shrink-0 items-start justify-between gap-3">
-          <div className="min-w-0">
+          <div className="min-w-0 pr-2">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5">
               <Sparkles className="h-3 w-3 text-primary" />
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
@@ -152,12 +158,23 @@ export function SwipeCard({
               {formula.chapterTitle}
             </p>
           </div>
-          <BookmarkButton
-            subjectId={subjectId}
-            chapterSlug={formula.chapterSlug}
-            formulaId={formula.id}
-            size="sm"
-          />
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
+            <div className="rounded-lg border border-border/80 bg-background/90 px-2 py-1 text-right shadow-sm ring-1 ring-white/5 backdrop-blur-sm">
+              <div className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                Ch {String(formula.chapterNumber).padStart(2, "0")}
+              </div>
+              <div className="mt-0.5 font-mono text-xs font-black tabular-nums leading-none text-primary">
+                {String(formula.formulaIndexInChapter).padStart(2, "0")}/
+                {String(formula.formulasInChapter).padStart(2, "0")}
+              </div>
+            </div>
+            <BookmarkButton
+              subjectId={subjectId}
+              chapterSlug={formula.chapterSlug}
+              formulaId={formula.id}
+              size="sm"
+            />
+          </div>
         </div>
 
         {/* Title */}
@@ -177,7 +194,7 @@ export function SwipeCard({
         </div>
 
         {/* Scrollable content */}
-        <div className="mt-5 min-h-0 flex-1 overflow-y-auto pr-1">
+        <div className="mt-5 min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-y-contain pr-1">
           {formula.description ? (
             <p className="text-sm leading-relaxed text-muted-foreground">{formula.description}</p>
           ) : null}

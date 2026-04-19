@@ -61,7 +61,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="overscroll-x-contain">
         {children}
         <Scripts />
       </body>
@@ -73,7 +73,7 @@ function RootComponent() {
   return (
     <div className="flex h-dvh flex-col overflow-hidden pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
       <AppHeader />
-      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-x-contain touch-pan-y">
         <Outlet />
       </main>
       <BottomNav />

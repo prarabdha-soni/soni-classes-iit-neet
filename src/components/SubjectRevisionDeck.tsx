@@ -18,13 +18,16 @@ const progressBarClass: Record<SubjectId, string> = {
 function buildHomeDeck(subjectId: SubjectId): SwipeFormula[] {
   const subject = getSubject(subjectId);
   if (!subject) return [];
-  return subject.chapters.flatMap((chapter) =>
-    chapter.formulas.slice(0, 2).map((formula) => ({
+  return subject.chapters.flatMap((chapter, chapterIdx) =>
+    chapter.formulas.map((formula, fIdx) => ({
       ...formula,
       chapterSlug: chapter.slug,
       chapterTitle: chapter.title,
       subjectId,
       subjectName: subject.name,
+      chapterNumber: chapterIdx + 1,
+      formulaIndexInChapter: fIdx + 1,
+      formulasInChapter: chapter.formulas.length,
     })),
   );
 }

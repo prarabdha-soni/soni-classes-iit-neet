@@ -2,10 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { RotateCcw, Target, Trophy } from "lucide-react";
-import { SUBJECTS, type SubjectId } from "@/data/content";
+import { HOME_SUBJECT_ORDER, SUBJECTS, type SubjectId } from "@/data/content";
 import { QuizSwipeCard, type QuizCardItem, type QuizSwipeDirection } from "@/components/QuizSwipeCard";
-import { SubjectBadge } from "@/components/SubjectIcon";
 import { useStreak } from "@/hooks/useStreak";
+
+function subjectLabel(id: SubjectId) {
+  return id === "mathematics" ? "Maths" : id.charAt(0).toUpperCase() + id.slice(1);
+}
 
 export const Route = createFileRoute("/revise")({
   head: () => ({
@@ -21,12 +24,10 @@ export const Route = createFileRoute("/revise")({
   component: RevisePage,
 });
 
-type Filter = "all" | SubjectId;
-
-function buildDeck(filter: Filter): QuizCardItem[] {
+function buildDeck(subjectId: SubjectId): QuizCardItem[] {
   const deck: QuizCardItem[] = [];
   for (const subject of SUBJECTS) {
-    if (filter !== "all" && subject.id !== filter) continue;
+    if (subject.id !== subjectId) continue;
     for (const chapter of subject.chapters) {
       chapter.quiz.forEach((q, idx) => {
         deck.push({
@@ -41,22 +42,14 @@ function buildDeck(filter: Filter): QuizCardItem[] {
   return deck;
 }
 
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "physics", label: "Physics" },
-  { id: "chemistry", label: "Chemistry" },
-  { id: "mathematics", label: "Maths" },
-  { id: "biology", label: "Biology" },
-];
-
 function RevisePage() {
-  const [filter, setFilter] = useState<Filter>("all");
+  const [subjectId, setSubjectId] = useState<SubjectId>(HOME_SUBJECT_ORDER[0]!);
   const [index, setIndex] = useState(0);
   const [exitDir, setExitDir] = useState<QuizSwipeDirection>(null);
   const [stats, setStats] = useState({ correct: 0, attempted: 0 });
   const { addXp } = useStreak();
 
-  const deck = useMemo(() => buildDeck(filter), [filter]);
+  const deck = useMemo(() => buildDeck(subjectId), [subjectId]);
   const card = deck[index];
   const completed = index >= deck.length;
 
@@ -79,8 +72,8 @@ function RevisePage() {
     setExitDir(null);
   };
 
-  const switchFilter = (next: Filter) => {
-    setFilter(next);
+  const switchSubject = (next: SubjectId) => {
+    setSubjectId(next);
     setIndex(0);
     setStats({ correct: 0, attempted: 0 });
     setExitDir(null);
@@ -98,29 +91,37 @@ function RevisePage() {
         </div>
       </div>
 
-      <div className="flex shrink-0 gap-2 overflow-x-auto pb-2">
-        {FILTERS.map((f) => {
-          const active = filter === f.id;
+      <div
+        className="flex shrink-0 flex-wrap justify-center gap-2 py-2"
+        role="tablist"
+        aria-label="Subjects"
+      >
+        {HOME_SUBJECT_ORDER.map((id) => {
+          const selected = id === subjectId;
           return (
             <button
-              key={f.id}
+              key={id}
               type="button"
-              onClick={() => switchFilter(f.id)}
-              className={`shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                active
+              role="tab"
+              aria-selected={selected}
+              onClick={() => switchSubject(id)}
+              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                selected
                   ? "border-primary bg-primary/15 text-primary"
-                  : "border-border bg-card/60 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  : "border-border bg-secondary/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
               }`}
             >
-              {f.id !== "all" ? (
-                <SubjectBadge id={f.id as SubjectId} emoji="" size="sm" />
-              ) : null}
-              <span className={f.id !== "all" ? "ml-1.5" : ""}>{f.label}</span>
+              {subjectLabel(id)}
             </button>
           );
         })}
       </div>
 
+      <div
+        className="flex min-h-0 flex-1 flex-col pb-1"
+        role="tabpanel"
+        aria-label={subjectLabel(subjectId)}
+      >
       <div className="shrink-0 pb-2">
         <div className="h-1 w-full overflow-hidden rounded-full bg-secondary/60">
           <motion.div
@@ -136,11 +137,11 @@ function RevisePage() {
           <span className="tabular-nums">
             {Math.min(index + 1, deck.length)} / {deck.length || 0}
           </span>
-          <span>{filter === "all" ? "All" : FILTERS.find((f) => f.id === filter)?.label}</span>
+          <span>{subjectLabel(subjectId)}</span>
         </div>
       </div>
 
-      <div className="relative min-h-0 flex-1 pb-1">
+      <div className="relative min-h-0 flex-1">
         <div className="relative mx-auto h-full min-h-0 w-full max-w-md">
           {!completed && deck[index + 2] ? (
             <motion.div
@@ -195,20 +196,12 @@ function RevisePage() {
                     <RotateCcw className="h-4 w-4" />
                     Restart deck
                   </button>
-                  {filter !== "all" ? (
-                    <button
-                      type="button"
-                      onClick={() => switchFilter("all")}
-                      className="rounded-xl border border-border bg-background/60 px-4 py-2.5 text-sm font-semibold hover:bg-secondary/60"
-                    >
-                      Try all subjects
-                    </button>
-                  ) : null}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, Lightbulb, RotateCcw, Check, X, BrainCircuit, Flame, ShieldCheck } from "lucide-react";
-import { getChapter, getSubject } from "@/data/content";
+import { getChapter, getSubject, type Subject } from "@/data/content";
 import { subjectGradient } from "@/components/SubjectIcon";
 import { MathExpr } from "@/components/MathExpr";
 import { BookmarkButton } from "@/components/BookmarkButton";
@@ -126,7 +126,7 @@ function ChapterPage() {
       </div>
 
       <div className="mt-5">
-        {tab === "formulas" && <FormulaList chapter={chapter} subjectId={subject.id} />}
+        {tab === "formulas" && <FormulaList chapter={chapter} subject={subject} />}
         {tab === "flashcards" && <Flashcards chapter={chapter} subjectId={subject.id} />}
         {tab === "quiz" && <Quiz chapter={chapter} subjectId={subject.id} />}
       </div>
@@ -134,7 +134,8 @@ function ChapterPage() {
   );
 }
 
-function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; subjectId: string }) {
+function SwipeFormulaRevision({ chapter, subject }: { chapter: ChapterData; subject: Subject }) {
+  const subjectId = subject.id;
   const { addXp } = useStreak();
   const [deck, setDeck] = useState(() => chapter.formulas.map((formula) => formula.id));
   const [knownIds, setKnownIds] = useState<string[]>([]);
@@ -322,6 +323,9 @@ function SwipeFormulaRevision({ chapter, subjectId }: { chapter: ChapterData; su
                 formula={currentFormula}
                 subjectId={subjectId}
                 chapterSlug={chapter.slug}
+                chapterNumber={subject.chapters.findIndex((c) => c.slug === chapter.slug) + 1}
+                formulaIndexInChapter={chapter.formulas.findIndex((f) => f.id === currentFormula.id) + 1}
+                formulasInChapter={chapter.formulas.length}
                 onSwipe={moveFormula}
                 onTestMe={() => openTestFor(currentFormula.id)}
               />
@@ -346,12 +350,18 @@ function SwipeCard({
   formula,
   subjectId,
   chapterSlug,
+  chapterNumber,
+  formulaIndexInChapter,
+  formulasInChapter,
   onSwipe,
   onTestMe,
 }: {
   formula: ChapterData["formulas"][number];
   subjectId: string;
   chapterSlug: string;
+  chapterNumber: number;
+  formulaIndexInChapter: number;
+  formulasInChapter: number;
   onSwipe: (outcome: SwipeOutcome) => void;
   onTestMe: () => void;
 }) {
@@ -383,7 +393,7 @@ function SwipeCard({
 
         x.set(0);
       }}
-      className="absolute inset-0 rounded-[2rem] card-soft p-5 sm:p-6"
+      className="absolute inset-0 cursor-grab touch-pan-y overscroll-x-contain rounded-[2rem] card-soft p-5 sm:p-6 select-none active:cursor-grabbing"
     >
       <motion.div style={{ opacity: weakOpacity }} className="absolute left-4 top-4 rounded-full border border-destructive/40 bg-destructive/12 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-destructive">
         Weak
@@ -393,9 +403,20 @@ function SwipeCard({
       </motion.div>
 
       <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between gap-3">
           <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Swipe Card</div>
-          <BookmarkButton subjectId={subjectId} chapterSlug={chapterSlug} formulaId={formula.id} size="sm" />
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
+            <div className="rounded-lg border border-border/80 bg-background/90 px-2 py-1 text-right shadow-sm ring-1 ring-white/5 backdrop-blur-sm">
+              <div className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                Ch {String(chapterNumber).padStart(2, "0")}
+              </div>
+              <div className="mt-0.5 font-mono text-xs font-black tabular-nums leading-none text-primary">
+                {String(formulaIndexInChapter).padStart(2, "0")}/
+                {String(formulasInChapter).padStart(2, "0")}
+              </div>
+            </div>
+            <BookmarkButton subjectId={subjectId} chapterSlug={chapterSlug} formulaId={formula.id} size="sm" />
+          </div>
         </div>
         <h3 className="mt-3 font-display text-2xl font-bold sm:text-3xl">{formula.title}</h3>
         <div className={`mt-3 h-1.5 w-16 rounded-full ${subjectGradient(subjectId as never)}`} />
@@ -559,8 +580,8 @@ function buildFormulaTest(chapter: ChapterData, formulaId: string): FormulaTest 
   };
 }
 
-function FormulaList({ chapter, subjectId }: { chapter: ChapterData; subjectId: string }) {
-  return <SwipeFormulaRevision chapter={chapter} subjectId={subjectId} />;
+function FormulaList({ chapter, subject }: { chapter: ChapterData; subject: Subject }) {
+  return <SwipeFormulaRevision chapter={chapter} subject={subject} />;
 }
 
 function Flashcards({ chapter, subjectId }: { chapter: ChapterData; subjectId: string }) {

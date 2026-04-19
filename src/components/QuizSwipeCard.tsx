@@ -72,7 +72,7 @@ export function QuizSwipeCard({
         x.set(0);
       }}
       transition={{ type: "spring", stiffness: 520, damping: 38 }}
-      className="absolute inset-0 cursor-grab overflow-hidden rounded-[1.85rem] border border-white/10 bg-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] will-change-transform active:cursor-grabbing"
+      className="absolute inset-0 cursor-grab touch-pan-y overscroll-x-contain overflow-hidden rounded-[1.85rem] border border-white/10 bg-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] will-change-transform select-none active:cursor-grabbing"
     >
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-hero" />
 
@@ -138,7 +138,7 @@ export function QuizSwipeCard({
         </h2>
 
         {/* Options */}
-        <div className="mt-5 flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto pr-1">
+        <div className="mt-5 flex min-h-0 flex-1 touch-pan-y flex-col gap-2.5 overflow-y-auto overscroll-y-contain pr-1">
           {item.options.map((opt, idx) => {
             const chosen = picked === idx;
             const correct = revealed && idx === item.answer;
