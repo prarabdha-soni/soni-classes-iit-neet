@@ -16,7 +16,7 @@ export const Route = createFileRoute("/profile")({
 
 function ProfilePage() {
   const { xp, streak, todayXp } = useStreak();
-  const { bookmarks } = useBookmarks();
+  const { items: bookmarks } = useBookmarks();
   const dailyGoal = 50;
   const goalPct = Math.min(100, Math.round((todayXp / dailyGoal) * 100));
 
