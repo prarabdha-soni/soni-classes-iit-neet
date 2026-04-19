@@ -10,12 +10,21 @@ export default defineConfig(async ({ command, mode }) => {
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
   ];
 
-  if (command === "build") {
-    const { cloudflare } = await import("@cloudflare/vite-plugin");
-    plugins.push(cloudflare({ viteEnvironment: { name: "ssr" } }));
-  }
+  const deployVercel = command === "build" && Boolean(process.env.VERCEL);
 
-  plugins.push(...tanstackStart(), react());
+  if (deployVercel) {
+    // Vercel: Nitro emits the serverless handler + static assets (Cloudflare output is not used).
+    plugins.push(...tanstackStart());
+    const { nitro } = await import("nitro/vite");
+    plugins.push(nitro());
+    plugins.push(react());
+  } else {
+    if (command === "build") {
+      const { cloudflare } = await import("@cloudflare/vite-plugin");
+      plugins.push(cloudflare({ viteEnvironment: { name: "ssr" } }));
+    }
+    plugins.push(...tanstackStart(), react());
+  }
 
   const envDefine: Record<string, string> = {};
   const loadedEnv = loadEnv(mode, process.cwd(), "VITE_");
