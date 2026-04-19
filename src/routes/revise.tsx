@@ -13,7 +13,7 @@ function subjectLabel(id: SubjectId) {
 export const Route = createFileRoute("/revise")({
   head: () => ({
     meta: [
-      { title: "Revise — Soni Classes" },
+      { title: "Revise — Nishu Classes" },
       {
         name: "description",
         content:

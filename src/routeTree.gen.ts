@@ -14,9 +14,11 @@ import { Route as TestRouteImport } from './routes/test'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ReviseRouteImport } from './routes/revise'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as FormulasRouteImport } from './routes/formulas'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SubjectSubjectIdRouteImport } from './routes/subject.$subjectId'
 import { Route as SubjectSubjectIdChapterSlugRouteImport } from './routes/subject.$subjectId.$chapterSlug'
+import { Route as FormulasSubjectIdChapterSlugRouteImport } from './routes/formulas.$subjectId.$chapterSlug'
 
 const VaultRoute = VaultRouteImport.update({
   id: '/vault',
@@ -43,6 +45,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FormulasRoute = FormulasRouteImport.update({
+  id: '/formulas',
+  path: '/formulas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -59,73 +66,92 @@ const SubjectSubjectIdChapterSlugRoute =
     path: '/$chapterSlug',
     getParentRoute: () => SubjectSubjectIdRoute,
   } as any)
+const FormulasSubjectIdChapterSlugRoute =
+  FormulasSubjectIdChapterSlugRouteImport.update({
+    id: '/$subjectId/$chapterSlug',
+    path: '/$subjectId/$chapterSlug',
+    getParentRoute: () => FormulasRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/formulas': typeof FormulasRouteWithChildren
   '/profile': typeof ProfileRoute
   '/revise': typeof ReviseRoute
   '/search': typeof SearchRoute
   '/test': typeof TestRoute
   '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
+  '/formulas/$subjectId/$chapterSlug': typeof FormulasSubjectIdChapterSlugRoute
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/formulas': typeof FormulasRouteWithChildren
   '/profile': typeof ProfileRoute
   '/revise': typeof ReviseRoute
   '/search': typeof SearchRoute
   '/test': typeof TestRoute
   '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
+  '/formulas/$subjectId/$chapterSlug': typeof FormulasSubjectIdChapterSlugRoute
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/formulas': typeof FormulasRouteWithChildren
   '/profile': typeof ProfileRoute
   '/revise': typeof ReviseRoute
   '/search': typeof SearchRoute
   '/test': typeof TestRoute
   '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
+  '/formulas/$subjectId/$chapterSlug': typeof FormulasSubjectIdChapterSlugRoute
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/formulas'
     | '/profile'
     | '/revise'
     | '/search'
     | '/test'
     | '/vault'
     | '/subject/$subjectId'
+    | '/formulas/$subjectId/$chapterSlug'
     | '/subject/$subjectId/$chapterSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/formulas'
     | '/profile'
     | '/revise'
     | '/search'
     | '/test'
     | '/vault'
     | '/subject/$subjectId'
+    | '/formulas/$subjectId/$chapterSlug'
     | '/subject/$subjectId/$chapterSlug'
   id:
     | '__root__'
     | '/'
+    | '/formulas'
     | '/profile'
     | '/revise'
     | '/search'
     | '/test'
     | '/vault'
     | '/subject/$subjectId'
+    | '/formulas/$subjectId/$chapterSlug'
     | '/subject/$subjectId/$chapterSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FormulasRoute: typeof FormulasRouteWithChildren
   ProfileRoute: typeof ProfileRoute
   ReviseRoute: typeof ReviseRoute
   SearchRoute: typeof SearchRoute
@@ -171,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/formulas': {
+      id: '/formulas'
+      path: '/formulas'
+      fullPath: '/formulas'
+      preLoaderRoute: typeof FormulasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -192,8 +225,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubjectSubjectIdChapterSlugRouteImport
       parentRoute: typeof SubjectSubjectIdRoute
     }
+    '/formulas/$subjectId/$chapterSlug': {
+      id: '/formulas/$subjectId/$chapterSlug'
+      path: '/$subjectId/$chapterSlug'
+      fullPath: '/formulas/$subjectId/$chapterSlug'
+      preLoaderRoute: typeof FormulasSubjectIdChapterSlugRouteImport
+      parentRoute: typeof FormulasRoute
+    }
   }
 }
+
+interface FormulasRouteChildren {
+  FormulasSubjectIdChapterSlugRoute: typeof FormulasSubjectIdChapterSlugRoute
+}
+
+const FormulasRouteChildren: FormulasRouteChildren = {
+  FormulasSubjectIdChapterSlugRoute: FormulasSubjectIdChapterSlugRoute,
+}
+
+const FormulasRouteWithChildren = FormulasRoute._addFileChildren(
+  FormulasRouteChildren,
+)
 
 interface SubjectSubjectIdRouteChildren {
   SubjectSubjectIdChapterSlugRoute: typeof SubjectSubjectIdChapterSlugRoute
@@ -208,6 +260,7 @@ const SubjectSubjectIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FormulasRoute: FormulasRouteWithChildren,
   ProfileRoute: ProfileRoute,
   ReviseRoute: ReviseRoute,
   SearchRoute: SearchRoute,

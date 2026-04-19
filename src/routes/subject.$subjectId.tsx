@@ -13,7 +13,7 @@ export const Route = createFileRoute("/subject/$subjectId")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.subject.name} — Tricks & Formulas | Soni Classes` },
+          { title: `${loaderData.subject.name} — Tricks & Formulas | Nishu Classes` },
           {
             name: "description",
             content: `Chapter-wise ${loaderData.subject.name} tricks and formulas for ${loaderData.subject.exam}. ${loaderData.subject.tagline}`,

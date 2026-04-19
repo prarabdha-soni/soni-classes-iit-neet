@@ -7,7 +7,7 @@ import { useBookmarks } from "@/hooks/useBookmarks";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Profile — Soni Classes" },
+      { title: "Profile — Nishu Classes" },
       { name: "description", content: "Your XP, streak, accuracy and saved formulas." },
     ],
   }),
@@ -21,7 +21,7 @@ function ProfilePage() {
   const goalPct = Math.min(100, Math.round((todayXp / dailyGoal) * 100));
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pb-24 pt-5">
+    <div className="mx-auto max-w-2xl px-4 pb-8 pt-5">
       {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -37,7 +37,7 @@ function ProfilePage() {
             <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
               Aspirant
             </div>
-            <h1 className="font-display text-xl font-bold tracking-tight">Soni Student</h1>
+            <h1 className="font-display text-xl font-bold tracking-tight">Nishu Student</h1>
             <p className="text-xs text-muted-foreground">JEE + NEET track · India 🇮🇳</p>
           </div>
         </div>

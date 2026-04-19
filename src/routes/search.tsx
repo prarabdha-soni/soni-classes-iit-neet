@@ -14,7 +14,7 @@ export const Route = createFileRoute("/search")({
   }),
   head: () => ({
     meta: [
-      { title: "Search formulas — Soni Classes" },
+      { title: "Search formulas — Nishu Classes" },
       { name: "description", content: "Search across every chapter, formula and trick." },
     ],
   }),

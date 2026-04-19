@@ -32,13 +32,13 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#1a1530" },
-      { title: "Soni Classes — JEE & NEET Tricks, Formulas & Quick Revision" },
+      { title: "Nishu Classes — NEET 2026" },
       {
         name: "description",
         content:
-          "Chapter-wise tricks, shortcut formulas, mnemonics, flashcards and quick quizzes for IIT-JEE and NEET.",
+          "Nishu Classes — NEET Physics concepts, chapter-wise. Swipeable AI cards and MCQ practice.",
       },
-      { name: "author", content: "Soni Classes" },
+      { name: "author", content: "Nishu Classes" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -71,9 +71,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="flex h-dvh flex-col overflow-hidden pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
+    <div className="flex h-dvh flex-col overflow-hidden">
       <AppHeader />
-      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-x-contain touch-pan-y">
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-x-contain touch-pan-y">
         <Outlet />
       </main>
       <BottomNav />

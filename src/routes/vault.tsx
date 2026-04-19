@@ -8,7 +8,7 @@ import { MathExpr } from "@/components/MathExpr";
 export const Route = createFileRoute("/vault")({
   head: () => ({
     meta: [
-      { title: "My Vault — Soni Classes" },
+      { title: "My Vault — Nishu Classes" },
       { name: "description", content: "Your saved formulas across all chapters." },
     ],
   }),
