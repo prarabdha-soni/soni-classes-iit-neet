@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { Brain, RotateCcw, Target, Trophy } from "lucide-react";
+import { RotateCcw, Target, Trophy } from "lucide-react";
 import { SUBJECTS, type SubjectId } from "@/data/content";
 import { QuizSwipeCard, type QuizCardItem, type QuizSwipeDirection } from "@/components/QuizSwipeCard";
-import { SubjectBadge, subjectGradient } from "@/components/SubjectIcon";
+import { SubjectBadge } from "@/components/SubjectIcon";
 import { useStreak } from "@/hooks/useStreak";
 
 export const Route = createFileRoute("/revise")({
@@ -87,33 +87,18 @@ function RevisePage() {
   };
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-8rem)] max-w-2xl flex-col px-4 pb-24 pt-5">
-      {/* Header */}
-      <div>
-        <div className="flex items-center gap-2">
-          <Brain className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
-            Important Questions
+    <div className="mx-auto flex w-full max-w-2xl min-h-0 flex-1 flex-col overflow-hidden px-3 pt-2">
+      <div className="flex shrink-0 items-center justify-between gap-2 pb-2">
+        <h1 className="font-display text-lg font-bold tracking-tight sm:text-xl">Revise</h1>
+        <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1">
+          <Target className="h-3 w-3 text-primary" />
+          <span className="text-xs font-bold text-primary tabular-nums">
+            {stats.correct}/{stats.attempted || deck.length}
           </span>
-        </div>
-        <div className="mt-1 flex items-end justify-between gap-3">
-          <div>
-            <h1 className="font-display text-2xl font-bold tracking-tight">Swipe to revise</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Tap an answer → swipe right if you got it, left to review later.
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5">
-            <Target className="h-3.5 w-3.5 text-primary" />
-            <span className="text-xs font-bold text-primary">
-              {stats.correct}/{stats.attempted || deck.length}
-            </span>
-          </div>
         </div>
       </div>
 
-      {/* Filter chips */}
-      <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+      <div className="flex shrink-0 gap-2 overflow-x-auto pb-2">
         {FILTERS.map((f) => {
           const active = filter === f.id;
           return (
@@ -136,39 +121,49 @@ function RevisePage() {
         })}
       </div>
 
-      {/* Progress bar */}
-      <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-secondary/60">
-        <motion.div
-          className="h-full bg-gradient-hero"
-          initial={false}
-          animate={{
-            width: `${deck.length === 0 ? 0 : Math.min(100, (index / deck.length) * 100)}%`,
-          }}
-          transition={{ type: "tween", duration: 0.18, ease: "easeOut" }}
-        />
-      </div>
-      <div className="mt-1.5 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-        <span>
-          {Math.min(index + 1, deck.length)} / {deck.length || 0}
-        </span>
-        <span>{filter === "all" ? "All subjects" : FILTERS.find((f) => f.id === filter)?.label}</span>
+      <div className="shrink-0 pb-2">
+        <div className="h-1 w-full overflow-hidden rounded-full bg-secondary/60">
+          <motion.div
+            className="h-full bg-gradient-hero"
+            initial={false}
+            animate={{
+              width: `${deck.length === 0 ? 0 : Math.min(100, (index / deck.length) * 100)}%`,
+            }}
+            transition={{ type: "tween", duration: 0.18, ease: "easeOut" }}
+          />
+        </div>
+        <div className="mt-1 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+          <span className="tabular-nums">
+            {Math.min(index + 1, deck.length)} / {deck.length || 0}
+          </span>
+          <span>{filter === "all" ? "All" : FILTERS.find((f) => f.id === filter)?.label}</span>
+        </div>
       </div>
 
-      {/* Swipe deck */}
-      <div className="relative mt-5 flex-1">
-        <div
-          className={`pointer-events-none absolute -top-12 left-1/2 h-40 w-[80%] -translate-x-1/2 rounded-full opacity-25 blur-3xl ${filter !== "all" ? subjectGradient(filter) : "bg-gradient-hero"}`}
-        />
-        <div className="relative mx-auto aspect-[3/4.6] w-full max-w-md">
-          {/* Stacked next-card preview */}
-          {!completed && deck[index + 1] ? (
-            <div
+      <div className="relative min-h-0 flex-1 pb-1">
+        <div className="relative mx-auto h-full min-h-0 w-full max-w-md">
+          {!completed && deck[index + 2] ? (
+            <motion.div
+              key={deck[index + 2]!.id}
+              initial={false}
+              animate={{ y: 20, scale: 0.92, opacity: 0.35 }}
+              transition={{ type: "tween", duration: 0.15, ease: "easeOut" }}
               aria-hidden
-              className="absolute inset-0 -z-10 translate-y-3 scale-[0.96] rounded-[1.85rem] border border-white/8 bg-card/60"
+              className="pointer-events-none absolute inset-x-3 top-0 h-full rounded-[1.85rem] border border-white/8 bg-card/60 shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
+            />
+          ) : null}
+          {!completed && deck[index + 1] ? (
+            <motion.div
+              key={deck[index + 1]!.id}
+              initial={false}
+              animate={{ y: 10, scale: 0.96, opacity: 0.45 }}
+              transition={{ type: "tween", duration: 0.15, ease: "easeOut" }}
+              aria-hidden
+              className="pointer-events-none absolute inset-x-3 top-0 h-full rounded-[1.85rem] border border-white/8 bg-card/70 shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-sm"
             />
           ) : null}
 
-          <AnimatePresence mode="popLayout" custom={exitDir}>
+          <AnimatePresence mode="sync" custom={exitDir}>
             {!completed && card ? (
               <QuizSwipeCard
                 key={card.id}

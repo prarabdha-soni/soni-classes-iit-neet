@@ -77,7 +77,7 @@ export function QuizSwipeCard({
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-hero" />
 
       <div
-        className="pointer-events-none absolute -top-24 -right-20 h-56 w-56 rounded-full opacity-30 blur-3xl"
+        className="pointer-events-none absolute -top-24 -right-20 h-56 w-56 rounded-full opacity-25 blur-2xl"
         style={{ background: "var(--gradient-physics)" }}
       />
 
