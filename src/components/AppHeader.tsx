@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Bookmark } from "lucide-react";
+import { Sparkles, User } from "lucide-react";
 import { StreakBadge } from "@/components/StreakBadge";
 
 export function AppHeader() {
@@ -15,7 +15,7 @@ export function AppHeader() {
               Soni Classes
             </div>
             <div className="hidden text-xs text-muted-foreground sm:block">
-              Physics quick revision
+              JEE & NEET quick revision
             </div>
           </div>
         </Link>
@@ -23,16 +23,16 @@ export function AppHeader() {
         <div className="ml-auto flex items-center gap-2">
           <StreakBadge />
           <Link
-            to="/vault"
-            aria-label="My Vault"
-            title="My Vault"
-            className="grid h-9 w-9 place-items-center rounded-full border border-border bg-secondary/50 text-muted-foreground transition-colors hover:border-accent/50 hover:text-accent"
+            to="/profile"
+            aria-label="Profile"
+            title="Profile"
+            className="grid h-10 w-10 place-items-center rounded-full border border-border bg-secondary/50 text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
             activeProps={{
               className:
-                "grid h-9 w-9 place-items-center rounded-full border border-accent bg-accent/20 text-accent",
+                "grid h-10 w-10 place-items-center rounded-full border border-primary bg-primary/15 text-primary",
             }}
           >
-            <Bookmark className="h-4 w-4" />
+            <User className="h-[18px] w-[18px]" strokeWidth={2.2} />
           </Link>
         </div>
       </div>

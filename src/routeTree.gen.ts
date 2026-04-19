@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as TestRouteImport } from './routes/test'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as ReviseRouteImport } from './routes/revise'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SubjectSubjectIdRouteImport } from './routes/subject.$subjectId'
 import { Route as SubjectSubjectIdChapterSlugRouteImport } from './routes/subject.$subjectId.$chapterSlug'
@@ -20,9 +23,24 @@ const VaultRoute = VaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviseRoute = ReviseRouteImport.update({
+  id: '/revise',
+  path: '/revise',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -44,14 +62,20 @@ const SubjectSubjectIdChapterSlugRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/profile': typeof ProfileRoute
+  '/revise': typeof ReviseRoute
   '/search': typeof SearchRoute
+  '/test': typeof TestRoute
   '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/profile': typeof ProfileRoute
+  '/revise': typeof ReviseRoute
   '/search': typeof SearchRoute
+  '/test': typeof TestRoute
   '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
@@ -59,7 +83,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/profile': typeof ProfileRoute
+  '/revise': typeof ReviseRoute
   '/search': typeof SearchRoute
+  '/test': typeof TestRoute
   '/vault': typeof VaultRoute
   '/subject/$subjectId': typeof SubjectSubjectIdRouteWithChildren
   '/subject/$subjectId/$chapterSlug': typeof SubjectSubjectIdChapterSlugRoute
@@ -68,21 +95,30 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/profile'
+    | '/revise'
     | '/search'
+    | '/test'
     | '/vault'
     | '/subject/$subjectId'
     | '/subject/$subjectId/$chapterSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/profile'
+    | '/revise'
     | '/search'
+    | '/test'
     | '/vault'
     | '/subject/$subjectId'
     | '/subject/$subjectId/$chapterSlug'
   id:
     | '__root__'
     | '/'
+    | '/profile'
+    | '/revise'
     | '/search'
+    | '/test'
     | '/vault'
     | '/subject/$subjectId'
     | '/subject/$subjectId/$chapterSlug'
@@ -90,7 +126,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProfileRoute: typeof ProfileRoute
+  ReviseRoute: typeof ReviseRoute
   SearchRoute: typeof SearchRoute
+  TestRoute: typeof TestRoute
   VaultRoute: typeof VaultRoute
   SubjectSubjectIdRoute: typeof SubjectSubjectIdRouteWithChildren
 }
@@ -104,11 +143,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revise': {
+      id: '/revise'
+      path: '/revise'
+      fullPath: '/revise'
+      preLoaderRoute: typeof ReviseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -148,10 +208,22 @@ const SubjectSubjectIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProfileRoute: ProfileRoute,
+  ReviseRoute: ReviseRoute,
   SearchRoute: SearchRoute,
+  TestRoute: TestRoute,
   VaultRoute: VaultRoute,
   SubjectSubjectIdRoute: SubjectSubjectIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

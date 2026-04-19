@@ -2,6 +2,9 @@ import type { SubjectId } from "@/data/content";
 
 const GRADIENT: Record<SubjectId, string> = {
   physics: "bg-gradient-physics",
+  chemistry: "bg-gradient-to-br from-emerald-500 to-teal-600",
+  mathematics: "bg-gradient-to-br from-amber-500 to-orange-600",
+  biology: "bg-gradient-to-br from-rose-500 to-pink-600",
 };
 
 export function SubjectBadge({ id, emoji, size = "md" }: { id: SubjectId; emoji: string; size?: "sm" | "md" | "lg" }) {
